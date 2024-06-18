@@ -1,0 +1,98 @@
+.sidebar {
+    height: 100%;
+    padding: 20px;
+    max-width: max-content;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: white;
+    float: left;
+    overflow-y: hidden;
+
+    transition: width 100ms ease-in-out;
+
+    text-wrap: nowrap;
+
+    &[data-closed="true"] {
+        width: 80px;
+        overflow: hidden;
+
+        div {
+            width: 0;
+        }
+
+        nav a {
+            padding-left: 9px;
+        }
+    }
+
+    div {
+        width: 100%;
+        overflow: hidden;
+        transition: width 100ms ease-in-out;
+    }
+
+    .logoContainer {
+        display: flex;
+        gap: 5px;
+        align-items: baseline;
+        color: var(--primary);
+        font-weight: 900;
+        font-size: 2rem;
+        user-select: none;
+        text-decoration: none;
+    }
+    
+    .logo {
+        height: 2rem;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        a {
+            text-decoration: none;
+            font-size: 1.25rem;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: var(--primary);
+            padding: 5px;
+            padding-left: 10px;
+            border-radius: 5px;
+
+            &.currentPath {
+                background-color: var(--secondary);
+                color: white;
+                cursor: default;
+                pointer-events: none;
+            }
+            
+
+            &:hover {
+                background-color: var(--primary);
+                color: white;
+            }
+
+        }
+    }
+}
+
+
+@media only screen and (max-width: 1300px) {
+    .sidebar {
+        width: 80px;
+        overflow: hidden;
+
+        div {
+            width: 0;
+        }
+
+        nav a {
+            padding-left: 9px;
+        }
+    }
+}

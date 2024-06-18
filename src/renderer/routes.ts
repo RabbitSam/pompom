@@ -1,0 +1,1 @@
+export const coreRoutes : string[] = ["/", "projects"]

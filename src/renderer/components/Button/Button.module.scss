@@ -1,0 +1,44 @@
+.buttonLink {
+    padding: 10px;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    border-radius: 5px;
+    border-style: solid;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.button {
+    &-primary {
+        color: white;
+        background-color: var(--primary);
+        border: 1px solid var(--primary);
+
+        &:hover {
+            color: var(--primary);
+            background-color: white;
+        }
+    }
+
+    &-secondary {
+        color: white;
+        background-color: var(--secondary);
+        border: 1px solid var(--secondary);
+
+        &:hover {
+            color: var(--secondary);
+            background-color: white;
+        }
+    }
+
+    &-tertiary {
+        color: white;
+        background-color: var(--tertiary);
+        border: 1px solid var(--tertiary);
+
+        &:hover {
+            color: var(--tertiary);
+            background-color: white;
+        }
+    }
+}
