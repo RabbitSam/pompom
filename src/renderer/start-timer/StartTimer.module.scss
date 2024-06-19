@@ -1,4 +1,8 @@
 .pageContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
     .header {
         -webkit-app-region: drag;
         -webkit-user-select: none;
@@ -17,6 +21,74 @@
                 cursor: pointer;
                 color: white;
                 background-color: var(--tertiary);
+            }
+        }
+    }
+
+    .timerSection {
+        padding: 0px 10px 10px 10px;
+        text-align: center;
+        user-select: none;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        :first-child {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        :last-child {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+    }
+
+    .finished {
+        padding: 0px 10px 10px 10px;
+        text-align: center;
+        user-select: none;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        
+        align-items: center;
+        justify-content: safe center;
+
+        button {
+            border-radius: 100%;
+            aspect-ratio: 1 / 1;
+
+            color: white;
+            text-align: center;
+            padding: 10px 12.5px;
+        }
+
+        .playButton {
+            background-color: var(--primary);
+            border: 3px solid var(--primary);
+
+            &:hover {
+                color: var(--primary);
+                background-color: white;
+            }
+        }
+
+        .restartButton {
+            background-color: var(--tertiary);
+            border: 3px solid var(--tertiary);
+
+            &:hover {
+                color: var(--tertiary);
+                background-color: white;
             }
         }
     }

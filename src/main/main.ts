@@ -33,7 +33,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
 
 ipcMain.on("start-timer", async (event, arg) => {
   mainWindow?.unmaximize();
-  mainWindow?.setSize(180, 140);
+  mainWindow?.setSize(200, 200);
   mainWindow?.setMenuBarVisibility(false);
   mainWindow?.setAlwaysOnTop(true);
 

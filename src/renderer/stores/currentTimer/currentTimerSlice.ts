@@ -39,9 +39,10 @@ export const currentTimerSlice = createSlice({
   },
   reducers: {
     setTimers: (state, action) => {
-      state = {
-        ...action.payload
-      };
+      let key: keyof typeof state;
+      for (key in state) {
+        state[key] = action.payload[key]
+      }
     },
   },
 });
