@@ -77,7 +77,11 @@
         grid-template-columns: 1fr 1fr 1fr;
         column-gap: 70px;
         row-gap: 30px;
-        width: 60%;
+        width: 100%;
+
+        @media only screen and (min-width: 1200px) {
+            width: 70%;
+        }
 
         .submit {
             width: 100%;

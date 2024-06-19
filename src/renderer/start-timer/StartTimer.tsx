@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectTimer } from "../stores/currentTimer/currentTimerSlice";
 
+
 function convertToSeconds({hour, minute, second} : {hour: number, minute: number, second?: number}) : number {
     return (hour * 60 * 60) + (minute * 60) + (second ? second : 0);
 }

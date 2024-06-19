@@ -14,6 +14,8 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import registerEventHandlers from './eventhandlers';
+
 
 class AppUpdater {
   constructor() {
@@ -23,7 +25,7 @@ class AppUpdater {
   }
 }
 
-let mainWindow: BrowserWindow | null = null;
+export let mainWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -31,35 +33,8 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.on("start-timer", async (event, arg) => {
-  mainWindow?.unmaximize();
-  mainWindow?.setSize(200, 200);
-  mainWindow?.setMenuBarVisibility(false);
-  mainWindow?.setAlwaysOnTop(true);
+registerEventHandlers();
 
-});
-
-ipcMain.on("end-timer", async (event, arg) => {
-  mainWindow?.setSize(1024, 728);
-  mainWindow?.maximize();
-  mainWindow?.setAlwaysOnTop(false);
-});
-
-ipcMain.on("minimize", async (event, arg) => {
-  mainWindow?.minimize();
-});
-
-ipcMain.on("maximize", async (event, arg) => {
-  if (mainWindow?.isMaximized()) {
-    mainWindow.unmaximize();
-  } else {
-    mainWindow?.maximize();
-  }
-});
-
-ipcMain.on("close", async (event, arg) => {
-  mainWindow?.close();
-});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -102,7 +77,7 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 728,
+    height: 768,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: app.isPackaged
