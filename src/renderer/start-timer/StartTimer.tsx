@@ -128,6 +128,17 @@ export default function StartTimer() {
                     <span className="visuallyHidden">Go Back</span>
                     <FontAwesomeIcon icon={faArrowLeft} width={20} height={20}/>
                 </button>
+                {
+                    pomsLeft > 2 ?
+                    <div className={styles.pomsLeft}>
+                        Poms Left: {pomsLeft}
+                    </div>
+                    :
+                    pomsLeft === 1 &&
+                    <div className={styles.pomsLeft}>
+                        Last Pom!
+                    </div>
+                }
                 <button onClick={e => window.electron.ipcRenderer.sendMessage("close")}>
                     <span className="visuallyHidden">Close App</span>
                     <FontAwesomeIcon icon={faXmark} width={20} height={20} />

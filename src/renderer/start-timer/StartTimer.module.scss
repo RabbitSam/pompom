@@ -8,6 +8,7 @@
         -webkit-user-select: none;
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         button {
             -webkit-app-region: no-drag;
@@ -23,6 +24,10 @@
                 background-color: var(--tertiary);
             }
         }
+
+        .pomsLeft {
+            font-weight: 600;
+        }
     }
 
     .timerSection {
@@ -34,7 +39,6 @@
         gap: 5px;
 
         :first-child {
-            font-size: 1rem;
             font-weight: 600;
         }
 
