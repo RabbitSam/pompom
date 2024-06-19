@@ -1,16 +1,4 @@
 .main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: safe center;
-    gap: 20px;
-
-    h1 {
-        color: var(--primary);
-        font-size: 3.5rem;
-        line-height: 2.5rem;
-    }
-
     p {
         line-height: 1.5rem;
     }
