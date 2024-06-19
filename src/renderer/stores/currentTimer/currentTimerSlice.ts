@@ -1,24 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 
-type TimerType = "pom" | "break" | "longBreak";
-type TimeKey = "hour" | "minute";
-
-interface TimerState {
-  pomCount: number,
-  pomTime: {
-    hour: number,
-    minute: number
-  },
-  breakTime: {
-    hour: number,
-    minute: number
-  },
-  longBreakTime: {
-    hour: number,
-    minute: number
-  },
-};
 
 export const currentTimerSlice = createSlice({
   name: 'currentTimer',
