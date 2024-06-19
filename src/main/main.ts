@@ -31,6 +31,36 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+ipcMain.on("start-timer", async (event, arg) => {
+  mainWindow?.unmaximize();
+  mainWindow?.setSize(180, 140);
+  mainWindow?.setMenuBarVisibility(false);
+  mainWindow?.setAlwaysOnTop(true);
+
+});
+
+ipcMain.on("end-timer", async (event, arg) => {
+  mainWindow?.setSize(1024, 728);
+  mainWindow?.maximize();
+  mainWindow?.setAlwaysOnTop(false);
+});
+
+ipcMain.on("minimize", async (event, arg) => {
+  mainWindow?.minimize();
+});
+
+ipcMain.on("maximize", async (event, arg) => {
+  if (mainWindow?.isMaximized()) {
+    mainWindow.unmaximize();
+  } else {
+    mainWindow?.maximize();
+  }
+});
+
+ipcMain.on("close", async (event, arg) => {
+  mainWindow?.close();
+});
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -79,6 +109,7 @@ const createWindow = async () => {
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
+    frame: false
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));

@@ -5,6 +5,9 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faStopwatch, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button/Button";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setTimers } from "../stores/currentTimer/currentTimerSlice";
 
 
 interface TimeState {
@@ -37,6 +40,10 @@ export default function QuickPom() {
 
     const [longBreakTime, setLongBreakTime] = useState<TimeState>(DEFAULT_LONG_BREAK_TIME);
 
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    // #region handlers
     const increment = (time: TimeState, key: "hour" | "minute") : TimeState => {
         const finalTime : TimeState = {...time};
         switch (key) {
@@ -109,6 +116,20 @@ export default function QuickPom() {
         setBreakTime(DEFAULT_BREAK_TIME);
         setLongBreakTime(DEFAULT_LONG_BREAK_TIME);
     };
+
+    const handleStart = () => {
+        dispatch(setTimers({
+            pomCount,
+            pomTime,
+            breakTime,
+            longBreakTime
+        }));
+
+        navigate("/start-timer");
+    };
+    // #endregion
+
+
 
     const numLongBreaks : number = Math.floor(pomCount / 4);
 
@@ -194,7 +215,7 @@ export default function QuickPom() {
                 </section>
 
                 <section className={styles.submit}>
-                    <Button category="primary" onClick={e => console.log(e)}>
+                    <Button category="primary" onClick={e => handleStart()}>
                         <FontAwesomeIcon icon={faPlay}/>&nbsp;&nbsp;Start Pom
                     </Button>
                     <Button category="tertiary" onClick={_ => handleReset()}>

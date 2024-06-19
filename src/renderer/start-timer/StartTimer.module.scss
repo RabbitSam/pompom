@@ -1,0 +1,23 @@
+.pageContainer {
+    .header {
+        -webkit-app-region: drag;
+        -webkit-user-select: none;
+        display: flex;
+        justify-content: space-between;
+
+        button {
+            -webkit-app-region: no-drag;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            color: var(--tertiary);
+            background-color: var(--background);
+
+            &:hover {
+                cursor: pointer;
+                color: white;
+                background-color: var(--tertiary);
+            }
+        }
+    }
+}
