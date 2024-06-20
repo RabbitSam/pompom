@@ -166,11 +166,21 @@ function HeaderButton({name, displayName, onClick, currentSortingHeader, isAscen
         <button className={styles.headerButton} onClick={onClick}>
             <div>
                 {displayName}
+                <div className="visuallyHidden">
+                    {name === currentSortingHeader ?
+                        `Click to sort in ${isAscending ? "descending" : "ascending"} order.`
+                        :
+                        `Click to sort by ${displayName}.`
+                    }
+                </div>
             </div>
             {
                 name === currentSortingHeader &&
                 <div>
                     <FontAwesomeIcon icon={isAscending ? faArrowUp : faArrowDown}/>
+                    <div className="visuallyHidden">
+                        Sorted by {displayName} in {isAscending ? "ascending" : "descending"} order.
+                    </div>
                 </div>
             }
         </button>
