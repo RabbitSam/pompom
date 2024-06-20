@@ -27,7 +27,7 @@ declare global {
 
   interface ElectronResponse {
     success: boolean,
-    data?: Object,
+    data?: any,
     error?: Error
   }
 }
