@@ -21,7 +21,7 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
         if (!isEdit) {
             const createProject = window.electron.ipcRenderer.on("create-project", (response: ElectronResponse) => {
                 if (response.success) {
-                    navigate("/projects");
+                    navigate(`/projects/${response.data}`);
                     setIsError(false);
                 } else {
                     setIsError(true);
@@ -42,7 +42,7 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
 
             const editProject = window.electron.ipcRenderer.on("edit-project", (response: ElectronResponse) => {
                 if (response.success) {
-                    navigate("/projects");
+                    navigate(-1);
                     setIsError(false);
                 } else {
                     setIsError(true);

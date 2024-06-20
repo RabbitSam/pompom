@@ -55,7 +55,7 @@ export default function registerProjectEvents() {
                 } else {
                     sendResponse(event, "create-project", {
                         success: true,
-                        data: projects
+                        data: projectId
                     });
                 }
 
