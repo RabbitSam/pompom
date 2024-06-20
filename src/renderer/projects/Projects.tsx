@@ -2,11 +2,11 @@ import PageContainer from "../components/PageContainer/PageContainer";
 import styles from "./Projects.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLaptop, faArrowUp, faArrowDown, faPlus, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, MouseEventHandler, Fragment } from "react";
+import { useState, useEffect, MouseEventHandler, Fragment, Children, cloneElement, ReactHTMLElement } from "react";
 import { Projects } from "../../main/events/projectEvents/projectEvents";
 import { ButtonLink } from "../components/Button/Button";
 import natsort from "natsort";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 type SortingHeader = "title" | "createdAt" | "lastModified" | "lastAccessed";
@@ -98,7 +98,7 @@ export default function Projects() {
                     New Project
                 </ButtonLink>
             </div>
-            <div className={styles.projects}>
+            <section className={styles.projects}>
                 {
                     HEADERS.map(header => (
                         <HeaderButton
@@ -110,23 +110,25 @@ export default function Projects() {
                         />
                     ))
                 }
-                <div className={styles.separator}></div>
+                <div className={styles.headerTitle}>
+                    Actions
+                </div>
                 {
                     projectIds.map((id) => (
                         <Fragment key={id}>
-                            <div className={styles.gridRowWrapper}>
-                                <div className={styles.projectItem}>
+                            <article className={styles.gridRowWrapper}>
+                                <Link to={`/projects/${id}`} className={styles.projectItem}>
                                     {projects[id].title}
-                                </div>
-                                <div className={styles.projectItem}>
+                                </Link>
+                                <Link to={`/projects/${id}`} className={styles.projectItem}>
                                     {formatDate(projects[id].createdAt)}
-                                </div>
-                                <div className={styles.projectItem}>
+                                </Link>
+                                <Link to={`/projects/${id}`} className={styles.projectItem}>
                                     {formatDate(projects[id].lastModified)}
-                                </div>
-                                <div className={styles.projectItem}>
+                                </Link>
+                                <Link to={`/projects/${id}`} className={styles.projectItem}>
                                     {formatDate(projects[id].lastAccessed)}
-                                </div>
+                                </Link>
                                 <div className={styles.projectActions}>
                                     <Link to={`/projects/${id}/edit`}>
                                         <div className="visuallyHidden">Edit</div>
@@ -137,7 +139,7 @@ export default function Projects() {
                                         <FontAwesomeIcon icon={faTrash}/>
                                     </Link>
                                 </div>
-                            </div>
+                            </article>
                         </Fragment>
                     ))
                 }
@@ -147,8 +149,7 @@ export default function Projects() {
                         No projects yet.
                     </div>
                 }
-                <div className={styles.separator}></div>
-            </div>
+            </section>
         </PageContainer>
     );
 }
