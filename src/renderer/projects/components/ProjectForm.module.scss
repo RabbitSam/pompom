@@ -1,0 +1,36 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: safe center;
+
+    label {
+        font-size: 1.75rem;
+        line-height: 2rem;
+        font-weight: 700;
+    }
+
+    input {
+        padding: 10px;
+        width: 60%;
+        border-radius: 5px;
+        border: 2px solid var(--secondary);
+        font-size: 1.1rem;
+        font-weight: 550;
+        text-align: center;
+
+        @media only screen and (max-width: 900px) {
+            width: 90% !important;
+        }
+    }
+
+    button {
+        width: 60%;
+
+        @media only screen and (max-width: 900px) {
+            width: 90% !important;
+        }
+    }
+}

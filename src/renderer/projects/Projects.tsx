@@ -1,11 +1,12 @@
 import PageContainer from "../components/PageContainer/PageContainer";
 import styles from "./Projects.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLaptop, faArrowUp, faArrowDown, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faLaptop, faArrowUp, faArrowDown, faPlus, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect, MouseEventHandler, Fragment } from "react";
 import { Projects } from "../../main/events/projectEvents/projectEvents";
-import Button, { ButtonLink } from "../components/Button/Button";
-import { useNavigate } from "react-router-dom";
+import { ButtonLink } from "../components/Button/Button";
+import natsort from "natsort";
+import { Link } from "react-router-dom";
 
 
 type SortingHeader = "title" | "createdAt" | "lastModified" | "lastAccessed";
@@ -47,7 +48,6 @@ export default function Projects() {
     const [projects, setProjects] = useState<Projects>({});
     const [isAscending, setIsAscending] = useState(false);
     const [sortingHeader, setSortingHeader] = useState<SortingHeader>("lastAccessed");
-    const navigation = useNavigate();
 
     useEffect(() => {
         const getProjects = window.electron.ipcRenderer.on("get-projects", (response: ElectronResponse, ...args) => {
@@ -61,6 +61,10 @@ export default function Projects() {
         };
     }, []);
 
+    useEffect(() => {
+        window.electron.ipcRenderer.sendMessage("get-projects");
+    }, []);
+
     const sortProjects = (header: SortingHeader) => {
         if (header === sortingHeader) {
             setIsAscending(!isAscending);
@@ -72,13 +76,14 @@ export default function Projects() {
 
     const projectIds : string[] = Object.keys(projects);
     projectIds.sort((a, b) => {
+        const sorter = natsort({insensitive: true, desc: !isAscending});
+        if (sortingHeader === "title") {
+            return sorter(projects[a][sortingHeader], projects[b][sortingHeader]);
+        }
+
         const aTime : number = new Date(projects[a][sortingHeader]).getTime();
         const bTime : number = new Date(projects[b][sortingHeader]).getTime();
-        if (isAscending) {
-            return aTime - bTime;
-        } else {
-            return bTime - aTime;
-        }
+        return sorter(aTime, bTime);
     });
 
     return (
@@ -109,17 +114,29 @@ export default function Projects() {
                 {
                     projectIds.map((id) => (
                         <Fragment key={id}>
-                            <div className={styles.projectItem}>
-                                {projects[id].title}
-                            </div>
-                            <div className={`${styles.projectItem} ${styles.projectItemTime}`}>
-                                {formatDate(projects[id].createdAt)}
-                            </div>
-                            <div className={`${styles.projectItem} ${styles.projectItemTime}`}>
-                                {formatDate(projects[id].lastModified)}
-                            </div>
-                            <div className={`${styles.projectItem} ${styles.projectItemTime}`}>
-                                {formatDate(projects[id].lastAccessed)}
+                            <div className={styles.gridRowWrapper}>
+                                <div className={styles.projectItem}>
+                                    {projects[id].title}
+                                </div>
+                                <div className={styles.projectItem}>
+                                    {formatDate(projects[id].createdAt)}
+                                </div>
+                                <div className={styles.projectItem}>
+                                    {formatDate(projects[id].lastModified)}
+                                </div>
+                                <div className={styles.projectItem}>
+                                    {formatDate(projects[id].lastAccessed)}
+                                </div>
+                                <div className={styles.projectActions}>
+                                    <Link to={`/projects/${id}/edit`}>
+                                        <div className="visuallyHidden">Edit</div>
+                                        <FontAwesomeIcon icon={faPenToSquare}/>
+                                    </Link>
+                                    <Link to={`/projects/${id}/delete`}>
+                                        <div className="visuallyHidden">Delete</div>
+                                        <FontAwesomeIcon icon={faTrash}/>
+                                    </Link>
+                                </div>
                             </div>
                         </Fragment>
                     ))

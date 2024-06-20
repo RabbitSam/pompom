@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .main {
     justify-content: start !important;
     h1 {
@@ -10,19 +12,27 @@
 
     .projects {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 0.5fr;
+        @media only screen and (max-width: 700px) {
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        }
+
         width: 100%;
 
         .separator {
             width: 100%;
             background-color: var(--tertiary);
-            grid-column: 1 / 5;
-            min-height: 2px;
-            max-height: 2px;
+            grid-column: 1 / 6;
+            min-height: 3px;
+            max-height: 3px;
+        }
 
-            &:first {
-                min-height: 2px;
-                max-height: 2px;
+        .gridRowWrapper {
+            display: contents;
+            &:nth-child(even) {
+                .projectItem, .projectActions {
+                    background-color: #e2dfc8;
+                }
             }
         }
 
@@ -31,9 +41,29 @@
             padding: 10px;
             font-weight: 550;
             line-height: 1.5rem;
+        }
 
-            &Time {
-                font-size: 0.8rem;
+        .projectActions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+
+            a {
+                color: var(--tertiary);
+                background-color: transparent;
+                height: 100%;
+                width: 100%;
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &:hover {
+                    color: white;
+                    background-color: var(--tertiary);
+                }
             }
         }
     }

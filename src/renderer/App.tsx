@@ -3,7 +3,12 @@ import Home from './home/Home';
 import './App.scss';
 import QuickPom from './quick-pom/QuickPom';
 import StartTimer from './start-timer/StartTimer';
+
 import Projects from './projects/Projects';
+import ViewProject from './projects/[id]/ViewProject';
+import CreateProject from './projects/create/CreateProject';
+import EditProject from './projects/[id]/edit/EditProject';
+import DeleteProject from './projects/[id]/delete/DeleteProject';
 
 
 export default function App() {
@@ -13,7 +18,12 @@ export default function App() {
         <Route path="/" element={<Home/>} />
         <Route path="quick-pom" element={<QuickPom/>}/>
         <Route path="start-timer" element={<StartTimer/>}/>
+
         <Route path="projects" element={<Projects/>}/>
+        <Route path="projects/:projectId" element={<ViewProject />}/>
+        <Route path="projects/:projectId/edit" element={<EditProject/>} />
+        <Route path="projects/:projectId/delete" element={<DeleteProject/>} />
+        <Route path="projects/create" element={<CreateProject />}/>
       </Routes>
     </Router>
   );

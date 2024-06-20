@@ -1,9 +1,8 @@
 import { ipcMain } from "electron";
 import {  readFile, writeFile } from "fs";
-import { v5 as uuid } from "uuid";
+import { v4 as uuid } from "uuid";
 
 const FILENAME : string = "projects.json";
-const UUID_NAMESPACE = "2513b3f2-6282-463b-9f50-90e95dc79524";
 
 export type Task = {
     title: string,
@@ -35,7 +34,7 @@ export default function registerProjectEvents() {
                 projects = JSON.parse(data);
             }
 
-            const projectId : string = uuid(title, UUID_NAMESPACE);
+            const projectId : string = uuid();
             const newProject : Project = {
                 title,
                 createdAt: new Date(),

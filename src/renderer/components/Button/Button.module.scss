@@ -42,3 +42,16 @@
         }
     }
 }
+
+button {
+    &:disabled {
+        filter: brightness(85%);
+        cursor: not-allowed;
+
+        &:hover {
+            color: inherit;
+            background-color: inherit;
+            cursor: not-allowed;
+        }
+    }
+}

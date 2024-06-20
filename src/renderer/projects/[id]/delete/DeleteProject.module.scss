@@ -1,0 +1,24 @@
+.main {
+    p {
+        line-height: 1.5rem;
+    }
+
+    .projectTitle {
+        font-size: 1.25rem;
+    }
+
+
+    .buttonsSection {
+        width: 50%;
+        display: flex;
+        gap: 10px;
+
+        button {
+            width: 100%;
+        }
+
+        a {
+            width: 100%;
+        }
+    }
+}

@@ -6,13 +6,14 @@ interface ButtonProps {
     category: "primary" | "secondary" | "tertiary",
     type?: "button" | "submit" | "reset",
     children?: React.ReactNode,
-    onClick: React.MouseEventHandler<HTMLButtonElement>
+    onClick: React.MouseEventHandler<HTMLButtonElement>,
+    disabled?: boolean
 };
 
 
-export default function Button({category, type, onClick, children} : ButtonProps) {
+export default function Button({category, type, onClick, children, disabled=false} : ButtonProps) {
     return (
-        <button className={styles[`button-${category}`]} type={type ? type : "button"} onClick={onClick}>{children}</button>
+        <button className={styles[`button-${category}`]} type={type ? type : "button"} onClick={onClick} disabled={disabled}>{children}</button>
     );
 }
 
