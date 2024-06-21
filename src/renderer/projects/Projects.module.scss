@@ -24,7 +24,7 @@
             position: relative;
             &:nth-child(even) {
                 .projectItem, .projectActions {
-                    background-color: #e2dfc8;
+                    background-color: var(--darkened-background);
                 }
             }
 
