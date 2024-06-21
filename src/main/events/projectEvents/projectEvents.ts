@@ -7,7 +7,8 @@ const FILENAME : string = "projects.json";
 export type Task = {
     title: string,
     timer: TimerState,
-    complete: boolean
+    complete: boolean,
+    completedAt?: Date | string
 };
 
 export type Project = {
