@@ -2,14 +2,14 @@ import Counter from "../Counter/Counter";
 import styles from "./TimeSetter.module.scss";
 
 
-interface PomTimeSetterProps {
+interface TimeSetterProps {
     title: string,
     value: TimeState,
     onChange?: (value : TimeState) => void
 }
 
 
-export default function PomTimeSetter({ title, value, onChange } : PomTimeSetterProps) {
+export default function TimeSetter({ title, value, onChange } : TimeSetterProps) {
     const increment = (key: "hour" | "minute") : void => {
         const finalTime : TimeState = {...value};
         switch (key) {
