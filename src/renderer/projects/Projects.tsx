@@ -6,7 +6,8 @@ import { useState, useEffect, MouseEventHandler, Fragment, Children, cloneElemen
 import { Projects } from "../../main/events/projectEvents/projectEvents";
 import { ButtonLink } from "../components/Button/Button";
 import natsort from "natsort";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import formatDate from "./utils/formatDate";
 
 
 type SortingHeader = "title" | "createdAt" | "lastModified" | "lastAccessed";
@@ -29,20 +30,6 @@ const HEADERS : {name : SortingHeader, displayName: string}[]= [
         displayName: "Last Accessed"
     },
 ];
-
-
-function formatDate(dateString: Date | string): string {
-    const date : Date = new Date(dateString);
-
-    return date.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-        hour12: true,
-        hour: "2-digit",
-        minute: "2-digit"
-    });
-}
 
 export default function Projects() {
     const [projects, setProjects] = useState<Projects>({});
