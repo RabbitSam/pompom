@@ -11,3 +11,7 @@ export function resolveHtmlPath(htmlFileName: string) {
   }
   return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
 }
+
+export function sendEventResponse(event: Electron.IpcMainEvent, title: string, response: ElectronResponse) {
+  event.reply(title, response);
+}

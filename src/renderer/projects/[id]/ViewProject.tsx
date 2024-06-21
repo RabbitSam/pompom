@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import PageContainer from "../../components/PageContainer/PageContainer";
 import styles from "./ViewProject.module.scss";
-import { Project } from "../../../main/events/projectEvents/projectEvents";
+import { Project, Task } from "../../../main/events/projectEvents/projectEvents";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -23,9 +23,15 @@ const DEFAULT_PROJECT : Project = {
     }
 };
 
+interface Tasks {
+    current: Task[],
+    completed: Task[]
+};
+
 
 export default function ViewProject() {
     const [project, setProject] = useState<Project>(DEFAULT_PROJECT);
+    const [tasks, setTasks] = useState<Tasks>({current: [], completed: []})
     const { projectId } = useParams();
 
     useEffect(() => {
@@ -35,13 +41,21 @@ export default function ViewProject() {
             }
         });
 
+        const getTasks = window.electron.ipcRenderer.on("get-tasks", (response: ElectronResponse) => {
+            if (response.success) {
+                setTasks(response.data);
+            }
+        });
+
         return () => {
             getProject();
+            getTasks();
         };
     }, []);
 
     useEffect(() => {
         window.electron.ipcRenderer.sendMessage("get-project", projectId);
+        window.electron.ipcRenderer.sendMessage("get-tasks", projectId);
     }, []);
 
     return (
@@ -85,7 +99,7 @@ export default function ViewProject() {
                             Mark as Complete
                         </div>
                         {
-                            project.tasks.current.map(task => {
+                            tasks.current.map(task => {
                                 const key : string = v5(task.title, UUID_NAMESPACE);
                                 return (
                                     <div className={styles.row} key={key}>
@@ -125,7 +139,7 @@ export default function ViewProject() {
                             Mark as Incomplete
                         </div>
                         {
-                            project.tasks.completed.map(task => {
+                            tasks.completed.map(task => {
                                 const key : string = v5(task.title, UUID_NAMESPACE);
                                 return (
                                     <div className={styles.row} key={key}>

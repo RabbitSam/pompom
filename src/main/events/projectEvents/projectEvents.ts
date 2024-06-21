@@ -1,13 +1,13 @@
 import { ipcMain } from "electron";
 import {  readFile, writeFile } from "fs";
 import { v4 as uuid } from "uuid";
+import { sendEventResponse } from "../../util";
 
-const FILENAME : string = "projects.json";
+export const FILENAME : string = "projects.json";
 
 export type Task = {
     title: string,
     timer: TimerState,
-    complete: boolean,
     completedAt?: Date | string
 };
 
@@ -17,18 +17,14 @@ export type Project = {
     lastModified: Date | string,
     lastAccessed: Date | string,
     tasks: {
-        completed: Task[],
-        current: Task[]
+        completed: string[],
+        current: string[]
     }
 };
 
 export type Projects = {
     [key: string]: Project
 };
-
-function sendResponse(event: Electron.IpcMainEvent, title: string, response: ElectronResponse) {
-    event.reply(title, response);
-}
 
 
 export default function registerProjectEvents() {
@@ -54,13 +50,13 @@ export default function registerProjectEvents() {
 
             writeFile(FILENAME, JSON.stringify(projects), {encoding: "utf-8"}, (werr) => {
                 if (werr) {
-                    sendResponse(event, "create-project", {
+                    sendEventResponse(event, "create-project", {
                         success: false,
                         error: werr
                     });
 
                 } else {
-                    sendResponse(event, "create-project", {
+                    sendEventResponse(event, "create-project", {
                         success: true,
                         data: projectId
                     });
@@ -91,9 +87,9 @@ export default function registerProjectEvents() {
                             error: werr
                         };
     
-                        sendResponse(event, "edit-project", response);
+                        sendEventResponse(event, "edit-project", response);
                     } else {
-                        sendResponse(event, "edit-project", {success: true, data: projects[projectId]});
+                        sendEventResponse(event, "edit-project", {success: true, data: projects[projectId]});
                     }
     
                 });
@@ -104,9 +100,9 @@ export default function registerProjectEvents() {
                     error: new Error("Project does not exist.")
                 };
 
-                sendResponse(event, "edit-project", response);
+                sendEventResponse(event, "edit-project", response);
             } else {
-                sendResponse(event, "edit-project", {success: true, data: projects[projectId]});
+                sendEventResponse(event, "edit-project", {success: true, data: projects[projectId]});
             }
         });
     });
@@ -128,15 +124,15 @@ export default function registerProjectEvents() {
                             error: werr
                         };
     
-                        sendResponse(event, "delete-project", response);
+                        sendEventResponse(event, "delete-project", response);
                     } else {
-                        sendResponse(event, "delete-project", {success: true});
+                        sendEventResponse(event, "delete-project", {success: true});
                     }
     
                 });
                 
             } else {
-                sendResponse(event, "delete-project", {success: false, error: new Error("Project does not exist.")});
+                sendEventResponse(event, "delete-project", {success: false, error: new Error("Project does not exist.")});
             }
         });
 
@@ -150,7 +146,7 @@ export default function registerProjectEvents() {
                     error: err
                 };
 
-                sendResponse(event, "get-projects", response);
+                sendEventResponse(event, "get-projects", response);
             } else {
                 const projects : Projects = JSON.parse(data);
                 const response : ElectronResponse = {
@@ -158,7 +154,7 @@ export default function registerProjectEvents() {
                     data: projects
                 };
 
-                sendResponse(event, "get-projects", response);
+                sendEventResponse(event, "get-projects", response);
             }
         });
     });
@@ -171,7 +167,7 @@ export default function registerProjectEvents() {
                     error: err
                 };
 
-                sendResponse(event, "get-project", response);
+                sendEventResponse(event, "get-project", response);
             } else {
                 const projects : Projects = JSON.parse(data);
                 const response : ElectronResponse = {
@@ -187,7 +183,7 @@ export default function registerProjectEvents() {
                     }
                 });
 
-                sendResponse(event, "get-project", response);
+                sendEventResponse(event, "get-project", response);
             }
         })
     });

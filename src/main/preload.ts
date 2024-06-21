@@ -3,7 +3,8 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 
 export type Channels = 'ipc-example' | "start-timer" | "end-timer" | "minimize" | "maximize" | "close" | 
-  "get-projects" | "get-project" | "create-project" | "edit-project" | "delete-project";
+  "get-projects" | "get-project" | "create-project" | "edit-project" | "delete-project" |
+  "get-tasks" | "get-task" | "create-task" | "edit-task" | "delete-task";
 
 const electronHandler = {
   ipcRenderer: {
