@@ -6,23 +6,17 @@ declare global {
     electron: ElectronHandler;
   }
 
+  interface TimeState {
+    hour: number,
+    minute: number,
+    second?: number
+  }
+
   interface TimerState {
     pomCount: number,
-    pomTime: {
-      hour: number,
-      minute: number,
-      second?: number
-    },
-    breakTime: {
-      hour: number,
-      minute: number,
-      second?: number
-    },
-    longBreakTime: {
-      hour: number,
-      minute: number,
-      second?: number
-    },
+    pomTime: TimeState,
+    breakTime: TimeState,
+    longBreakTime: TimeState,
   }
 
   interface ElectronResponse {
