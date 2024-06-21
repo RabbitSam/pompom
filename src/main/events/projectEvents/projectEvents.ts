@@ -15,7 +15,10 @@ export type Project = {
     createdAt: Date | string,
     lastModified: Date | string,
     lastAccessed: Date | string,
-    tasks: Task[]
+    tasks: {
+        completed: Task[],
+        current: Task[]
+    }
 };
 
 export type Projects = {
@@ -41,8 +44,11 @@ export default function registerProjectEvents() {
                 createdAt: new Date(),
                 lastModified: new Date(),
                 lastAccessed: new Date(),
-                tasks: []
-            }
+                tasks: {
+                    completed: [],
+                    current: []
+                }
+            };
             projects[projectId] = newProject;
 
             writeFile(FILENAME, JSON.stringify(projects), {encoding: "utf-8"}, (werr) => {
@@ -74,7 +80,7 @@ export default function registerProjectEvents() {
                 projects[projectId].title = title;
                 projects[projectId] = {
                     ...projects[projectId],
-                    lastModified: new Date()
+                    lastModified: new Date(),
                 };
 
                 writeFile(FILENAME, JSON.stringify(projects), {encoding: "utf-8"}, (werr) => {
@@ -171,6 +177,14 @@ export default function registerProjectEvents() {
                     success: true,
                     data: projects[projectId]
                 };
+
+                projects[projectId].lastAccessed = new Date();
+
+                writeFile(FILENAME, JSON.stringify(projects), {encoding: "utf-8"}, (err) => {
+                    if (err) {
+                        console.log("Error occurred when writing");
+                    }
+                });
 
                 sendResponse(event, "get-project", response);
             }
