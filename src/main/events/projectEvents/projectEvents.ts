@@ -26,9 +26,16 @@ export type Projects = {
     [key: string]: Project
 };
 
+export type ProjectEvent = "create-project" | "edit-project" | "get-project" | "get-projects" | "delete-project";
+
+// Wrapper to verify that project events are ensured.
+function projectEventWrapper(projectEvent: ProjectEvent): ProjectEvent {
+    return projectEvent;
+}
+
 
 export default function registerProjectEvents() {
-    ipcMain.on("create-project", async (event, title: string) => {
+    ipcMain.on(projectEventWrapper("create-project"), async (event, title: string) => {
         readFile(FILENAME, {encoding: "utf-8"}, (err, data) => {
             let projects : Projects = {};
             if (!err) {
@@ -50,13 +57,13 @@ export default function registerProjectEvents() {
 
             writeFile(FILENAME, JSON.stringify(projects), {encoding: "utf-8"}, (werr) => {
                 if (werr) {
-                    sendEventResponse(event, "create-project", {
+                    sendEventResponse(event, projectEventWrapper("create-project"), {
                         success: false,
                         error: werr
                     });
 
                 } else {
-                    sendEventResponse(event, "create-project", {
+                    sendEventResponse(event, projectEventWrapper("create-project"), {
                         success: true,
                         data: projectId
                     });
@@ -87,9 +94,9 @@ export default function registerProjectEvents() {
                             error: werr
                         };
     
-                        sendEventResponse(event, "edit-project", response);
+                        sendEventResponse(event, projectEventWrapper("edit-project"), response);
                     } else {
-                        sendEventResponse(event, "edit-project", {success: true, data: projects[projectId]});
+                        sendEventResponse(event, projectEventWrapper("edit-project"), {success: true, data: projects[projectId]});
                     }
     
                 });
@@ -100,14 +107,14 @@ export default function registerProjectEvents() {
                     error: new Error("Project does not exist.")
                 };
 
-                sendEventResponse(event, "edit-project", response);
+                sendEventResponse(event, projectEventWrapper("edit-project"), response);
             } else {
-                sendEventResponse(event, "edit-project", {success: true, data: projects[projectId]});
+                sendEventResponse(event, projectEventWrapper("edit-project"), {success: true, data: projects[projectId]});
             }
         });
     });
 
-    ipcMain.on("delete-project", async (event, projectId: string) => {
+    ipcMain.on(projectEventWrapper("delete-project"), async (event, projectId: string) => {
         readFile(FILENAME, {encoding: "utf-8"}, (err, data) => {
             let projects : Projects = {};
             if (!err) {
@@ -124,21 +131,21 @@ export default function registerProjectEvents() {
                             error: werr
                         };
     
-                        sendEventResponse(event, "delete-project", response);
+                        sendEventResponse(event, projectEventWrapper("delete-project"), response);
                     } else {
-                        sendEventResponse(event, "delete-project", {success: true});
+                        sendEventResponse(event, projectEventWrapper("delete-project"), {success: true});
                     }
     
                 });
                 
             } else {
-                sendEventResponse(event, "delete-project", {success: false, error: new Error("Project does not exist.")});
+                sendEventResponse(event, projectEventWrapper("delete-project"), {success: false, error: new Error("Project does not exist.")});
             }
         });
 
     });
 
-    ipcMain.on("get-projects", async (event, ...args) => {
+    ipcMain.on(projectEventWrapper("get-projects"), async (event, ...args) => {
         readFile(FILENAME, {encoding: "utf-8"}, (err, data) => {
             if (err) {
                 const response : ElectronResponse = {
@@ -146,7 +153,7 @@ export default function registerProjectEvents() {
                     error: err
                 };
 
-                sendEventResponse(event, "get-projects", response);
+                sendEventResponse(event, projectEventWrapper("get-projects"), response);
             } else {
                 const projects : Projects = JSON.parse(data);
                 const response : ElectronResponse = {
@@ -154,12 +161,12 @@ export default function registerProjectEvents() {
                     data: projects
                 };
 
-                sendEventResponse(event, "get-projects", response);
+                sendEventResponse(event, projectEventWrapper("get-projects"), response);
             }
         });
     });
 
-    ipcMain.on("get-project", async (event, projectId: string) => {
+    ipcMain.on(projectEventWrapper("get-project"), async (event, projectId: string) => {
         readFile(FILENAME, {encoding: "utf-8"}, (err, data) => {
             if (err) {
                 const response : ElectronResponse = {
@@ -167,7 +174,7 @@ export default function registerProjectEvents() {
                     error: err
                 };
 
-                sendEventResponse(event, "get-project", response);
+                sendEventResponse(event, projectEventWrapper("get-project"), response);
             } else {
                 const projects : Projects = JSON.parse(data);
                 const response : ElectronResponse = {
@@ -183,7 +190,7 @@ export default function registerProjectEvents() {
                     }
                 });
 
-                sendEventResponse(event, "get-project", response);
+                sendEventResponse(event, projectEventWrapper("get-project"), response);
             }
         })
     });

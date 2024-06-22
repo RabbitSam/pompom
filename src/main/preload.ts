@@ -1,10 +1,16 @@
 // Disable no-unused-vars, broken for spread args
 /* eslint no-unused-vars: off */
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { TaskEvent } from './events/projectEvents/projectTaskEvents';
+import { ProjectEvent } from './events/projectEvents/projectEvents';
+import { TimerEvent } from './events/timerEvents';
+import { WindowButtonEvent } from './events/windowButtonEvents';
 
-export type Channels = 'ipc-example' | "start-timer" | "end-timer" | "minimize" | "maximize" | "close" | 
-  "get-projects" | "get-project" | "create-project" | "edit-project" | "delete-project" |
-  "get-tasks" | "get-task" | "create-task" | "edit-task" | "delete-task";
+export type Channels = 'ipc-example' | 
+  WindowButtonEvent | 
+  TimerEvent |
+  ProjectEvent |
+  TaskEvent;
 
 const electronHandler = {
   ipcRenderer: {
