@@ -45,11 +45,10 @@
         display: flex;
         height: 100%;
         width: 100%;
-        position: relative;
 
         main {
             width: 100%;
-            height: calc(100% - 44px);
+            height: 100%;
             padding: 20px;
             overflow-y: auto;
 
@@ -64,6 +63,10 @@
                 font-size: 2.75rem;
                 line-height: 2.5rem;
                 user-select: none;
+            }
+
+            &.scroll {
+                height: calc(100% - 44px) !important;
             }
 
         }
