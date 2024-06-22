@@ -3,6 +3,7 @@
 
     h1 {
         font-size: 2rem !important;
+        margin-left: 10px;
     }
 
     .pageHeader {
@@ -24,6 +25,7 @@
         display: flex;
         gap: 10px;
         width: 100%;
+        padding-left: 10px;
     }
 
     .tasks {
@@ -36,6 +38,7 @@
             text-align: center;
             border-bottom: 1px dashed;
             width: max-content;
+            margin-left: 10px;
         }
 
         .currentTasks {
@@ -46,8 +49,29 @@
 
             .taskGrid {
                 display: grid;
-                grid-template-columns: 1fr 0.5fr 1fr 1fr;
+                grid-template-columns: 1fr 0.5fr 1fr auto;
 
+            }
+        }
+
+        .taskContent {
+            padding: 10px;
+            font-weight: 550;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            .play {
+               height: 100%;
+               border-radius: 100%;
+               background-color: var(--primary);
+               border-color: var(--primary);
+               color: white;
+
+               &:hover {
+                background-color: white;
+                color: var(--primary);
+               }
             }
         }
 
@@ -59,8 +83,10 @@
         }
 
         .header {
-            font-weight: 600;
+            font-weight: 700;
             line-height: 1.5rem;
+            padding: 10px;
+            font-size: 1.25rem;
         }
 
         .row {
@@ -73,7 +99,7 @@
 
             & > :last-child {
                 border-top-right-radius: 10px;
-                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
             }
 
             &:nth-child(even) {

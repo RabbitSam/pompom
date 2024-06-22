@@ -4,7 +4,7 @@ import styles from "./ViewProject.module.scss";
 import { Project, Task } from "../../../main/events/projectEvents/projectEvents";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrash, faPlus, faCheckSquare, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { ButtonLink } from "../../components/Button/Button";
 import { v5 } from "uuid";
 import formatDate from "../utils/formatDate";
@@ -96,7 +96,7 @@ export default function ViewProject() {
                             Total Time
                         </div>
                         <div className={styles.header}>
-                            Mark as Complete
+                            Actions
                         </div>
                         {
                             tasks.current.map(task => {
@@ -104,15 +104,22 @@ export default function ViewProject() {
                                 return (
                                     <div className={styles.row} key={key}>
                                         <div className={styles.taskContent}>
-                                            {task.title}
+                                            <button className={styles.play}>
+                                                <FontAwesomeIcon icon={faPlay} width={25} height={10}/>
+                                            </button>
+                                            <div>
+                                                {task.title}
+                                            </div>
                                         </div>
                                         <div className={styles.taskContent}>
-                                            {task.completedAt ? formatDate(task.completedAt) : "Error"}
+                                            {task.timer.pomCount}
                                         </div>
-                                        <label htmlFor={key} className="visuallyHidden">
-                                            Mark task as complete.
-                                        </label>
-                                        <input type="checkbox" name="complete" id={key} className={styles.marker} checked={false}/>
+                                        <div className={styles.taskContent}>
+                                            w
+                                        </div>
+                                        <div className={styles.taskContent}>
+                                            
+                                        </div>
                                     </div>
                                 );
                             })
