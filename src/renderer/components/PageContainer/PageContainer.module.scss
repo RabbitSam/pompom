@@ -6,6 +6,9 @@
 
     .titleBar {
         width: 100%;
+        min-height: 44px;
+        max-height: 44px;
+        overflow: hidden;
         -webkit-app-region: drag;
         -webkit-user-select: none;
 
@@ -46,7 +49,7 @@
 
         main {
             width: 100%;
-            height: 100%;
+            height: calc(100% - 44px);
             padding: 20px;
             overflow-y: auto;
 
@@ -63,12 +66,6 @@
                 user-select: none;
             }
 
-            @media only screen and (max-height: 730px) {
-                &::after {
-                    content: "";
-                    min-height: 20px;
-                }   
-            }
         }
     }
 }
