@@ -26,7 +26,7 @@ function taskEventWrapper(taskEvent : TaskEvent): TaskEvent {
 
 export type TaskEvent = "create-task" | "edit-task" | "delete-task" | "get-tasks" | "get-task" | "set-task-completion-status";
 
-export default function registerProjectEvents() {
+export default function registerTaskEvents() {
     ipcMain.on(taskEventWrapper("create-task"), async (event, projectId: string, newTask : Task) => {
         // Read tasks file
         readFile(FILENAME, {encoding: "utf-8"}, (err, data) => {
