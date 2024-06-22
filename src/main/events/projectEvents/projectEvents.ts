@@ -177,20 +177,27 @@ export default function registerProjectEvents() {
                 sendEventResponse(event, projectEventWrapper("get-project"), response);
             } else {
                 const projects : Projects = JSON.parse(data);
-                const response : ElectronResponse = {
-                    success: true,
-                    data: projects[projectId]
-                };
+                if (projectId in projects) {
+                    const response : ElectronResponse = {
+                        success: true,
+                        data: projects[projectId]
+                    };
 
-                projects[projectId].lastAccessed = new Date();
+                    projects[projectId].lastAccessed = new Date();
 
-                writeFile(FILENAME, JSON.stringify(projects), {encoding: "utf-8"}, (err) => {
-                    if (err) {
-                        console.log("Error occurred when writing");
-                    }
-                });
+                    writeFile(FILENAME, JSON.stringify(projects), {encoding: "utf-8"}, (err) => {
+                        if (err) {
+                            console.log("Error occurred when writing");
+                        }
+                    });
 
-                sendEventResponse(event, projectEventWrapper("get-project"), response);
+                    sendEventResponse(event, projectEventWrapper("get-project"), response);
+                } else {
+                    sendEventResponse(event, projectEventWrapper("get-project"), {
+                        success: false,
+                        error: new Error("Project doesn't exist")
+                    });
+                }
             }
         })
     });

@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import { readFile, rename, unlink, writeFile } from "fs";
 import { FILENAME as PROJECT_FILENAME, Projects, Task, Project } from "./projectEvents";
-import { sendEventResponse } from "../../util";
+import { logErrors, sendEventResponse } from "../../util";
 import { v4 as uuid } from "uuid";
 
 const FILENAME : string = "tasks.json";
@@ -128,18 +128,180 @@ export default function registerProjectEvents() {
     });
 
     ipcMain.on(taskEventWrapper("delete-task"), async (event, projectId: string, taskId: string) => {
-        
+        readFile(FILENAME, {encoding: "utf-8"}, (err, tasksData) => {
+            if (err) {
+                sendEventResponse(event, taskEventWrapper("delete-task"), {
+                    success: false,
+                    error: new Error("Couldn't open tasks file.")
+                });
+            } else {
+                const tasks : Tasks = JSON.parse(tasksData);
+                if (taskId in tasks) {
+                    delete tasks[taskId];
+                    
+                    writeFile(TEMP_TASKS_FILENAME, JSON.stringify(tasks), {encoding: "utf-8"}, err => {
+                        if (err) {
+                            sendEventResponse(event, taskEventWrapper("delete-task"), {
+                                success: false,
+                                error: new Error("Couldn't write to tasks temp file.")
+                            });
+                        } else {
+                            readFile(PROJECT_FILENAME, {encoding: "utf-8"}, (err, data) => {
+                                if (err) {
+                                    sendEventResponse(event, taskEventWrapper("delete-task"), {
+                                        success: false,
+                                        error: new Error("Couldn't open project file")
+                                    });
+                                } else {
+                                    const projects : Projects = JSON.parse(data);
+
+                                    if (projectId in projects) {
+                                        const currentProject : Project = projects[projectId];
+                                        currentProject.tasks.current = projects[projectId].tasks.current.filter((item) => item !== taskId);
+                                        currentProject.tasks.completed = projects[projectId].tasks.completed.filter((item) => item !== taskId);
+
+                                        projects[projectId] = currentProject;
+
+                                        writeFile(PROJECT_FILENAME, JSON.stringify(projects), {encoding: "utf-8"}, (err) => {
+                                            if (err) {
+                                                deleteTempFile(TEMP_TASKS_FILENAME);
+                                                sendEventResponse(event, taskEventWrapper("delete-task"), {
+                                                    success: false,
+                                                    error: new Error("Couldn't save project file")
+                                                });                                            
+                                            } else {
+                                                rename(TEMP_TASKS_FILENAME, FILENAME, (err) => {
+                                                    if (err) {
+                                                        sendEventResponse(event, taskEventWrapper("delete-task"), {
+                                                            success: false,
+                                                            error: new Error("Couldn't rename tasks file")
+                                                        }); 
+                                                    } else {
+                                                        sendEventResponse(event, taskEventWrapper("delete-task"), {
+                                                            success: true
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        sendEventResponse(event, taskEventWrapper("delete-task"), {
+                                            success: false,
+                                            error: new Error("Project doesn't exist.")
+                                        });
+                                    }
+                                }
+
+                            });
+                        }
+                    });
+                }
+            }
+        });
     });
 
-    ipcMain.on(taskEventWrapper("get-task"), async (event, projectId: string, taskId: string) => {
-
+    ipcMain.on(taskEventWrapper("get-task"), async (event, taskId: string) => {
+        readFile(FILENAME, {encoding: "utf-8"}, (err, data) => {
+            if (err) {
+                sendEventResponse(event, taskEventWrapper("get-task"), {
+                    success: false,
+                    error: new Error("Couldn't open tasks file")
+                });
+            } else {
+                const tasks : Tasks = JSON.parse(data);
+                if (taskId in tasks) {
+                    sendEventResponse(event, taskEventWrapper("get-task"), {
+                        success: true,
+                        data: tasks[taskId]
+                    }); 
+                } else {
+                    sendEventResponse(event, taskEventWrapper("get-task"), {
+                        success: false,
+                        error: new Error("Task doesn't exist")
+                    });
+                }
+            }
+        });
     });
 
     ipcMain.on(taskEventWrapper("get-tasks"), async (event, projectId: string) => {
+        readFile(PROJECT_FILENAME, {encoding: "utf-8"}, (err, data) => {
+            if (err) {
+                sendEventResponse(event, taskEventWrapper("get-tasks"), {
+                    success: false,
+                    error: new Error("Couldn't open project file")
+                });
+            } else {
+                const projects : Projects = JSON.parse(data);
+                if (projectId in projects) {
+                    const project : Project = projects[projectId];
 
+                    readFile(FILENAME, {encoding: "utf-8"}, (err, tasksData) => {
+                        if (err) {
+                            sendEventResponse(event, taskEventWrapper("get-tasks"), {
+                                success: false,
+                                error: new Error("Couldn't open tasks file.")
+                            });
+                        } else {
+                            const tasks : Tasks = JSON.parse(tasksData);
+
+                            const taskIndexesToDelete : {
+                                completed: number[],
+                                current: number[]
+                            } = {
+                                completed: [],
+                                current: []
+                            };
+
+                            const filter = (key: "completed" | "current") => (taskId : string, indx : number) => {
+                                if (taskId in tasks) {
+                                    return true;
+                                } else {
+                                    taskIndexesToDelete[key].push(indx);
+                                    return false;
+                                }
+                            };
+
+                            const finalTasks : { 
+                                completed: Task[],
+                                current: Task[]
+                            } = {
+                                completed: project.tasks.completed.filter(filter("completed")).map(taskId => tasks[taskId]),
+                                current: project.tasks.current.filter(filter("current")).map(taskId => tasks[taskId])
+                            };
+
+                            // Side Effect
+                            if (taskIndexesToDelete.completed.length || taskIndexesToDelete.current.length) {
+                                project.tasks.completed = project.tasks.completed.filter(taskId => !(taskId in taskIndexesToDelete.completed));
+                                project.tasks.current = project.tasks.completed.filter(taskId => !(taskId in taskIndexesToDelete.current));
+
+                                projects[projectId] = project;
+
+                                writeFile(PROJECT_FILENAME, JSON.stringify(projects), { encoding: 'utf-8' }, (err) => {
+                                    if (err) {
+                                        logErrors(taskEventWrapper("get-tasks"), "Couldn't delete orphaned task Ids.");
+                                    }
+                                });
+                            }
+
+                            sendEventResponse(event, taskEventWrapper('get-tasks'), {
+                                success: true,
+                                data: finalTasks
+                            });
+                        }
+                    });
+
+                } else {
+                    sendEventResponse(event, taskEventWrapper("get-tasks"), {
+                        success: false,
+                        error: new Error("Project doesn't exist.")
+                    });
+                }
+            }
+        });
     });
 
-    ipcMain.on(taskEventWrapper("set-task-completion-status"), async (event, projectId: string, taskId: string, isComplete: boolean) => 
+    ipcMain.on(taskEventWrapper("set-task-completion-status"), async (event, projectId: string, taskId: string, isComplete: boolean) => {
         readFile(PROJECT_FILENAME, {encoding: "utf-8"}, (err, data) => {
             if (err) {
                 sendEventResponse(event, taskEventWrapper("set-task-completion-status"), {
@@ -177,7 +339,11 @@ export default function registerProjectEvents() {
                                 });
                             } else {
                                 const tasks : Tasks = JSON.parse(tasksData);
-                                tasks[taskId].completedAt = new Date();
+                                if (isComplete) {
+                                    tasks[taskId].completedAt = new Date();
+                                } else {
+                                    delete tasks[taskId].completedAt;
+                                }
 
                                 writeFile(FILENAME, JSON.stringify(tasks), {encoding: "utf-8"}, err => {
                                     if (err) {
@@ -208,5 +374,5 @@ export default function registerProjectEvents() {
                 });
             }
         })
-    );
+    });
 }
