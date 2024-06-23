@@ -21,15 +21,17 @@
         }
     }
 
+    .pageHeader, .projectTaskActions, .tasks {
+        width: 100%;
+    }
+
     .projectTaskActions {
         display: flex;
         gap: 10px;
-        width: 100%;
         padding-left: 10px;
     }
 
     .tasks {
-        width: 100%;
         display: flex;
         gap: 50px;
         flex-direction: column;
@@ -49,8 +51,14 @@
 
             .taskGrid {
                 display: grid;
-                grid-template-columns: 1fr 0.5fr 1fr auto;
+                grid-template-columns: 1fr auto 0.75fr auto;
 
+            }
+
+            .taskContent:nth-child(2) {
+                width: 100%;
+                display: flex;
+                justify-content : center;
             }
         }
 
@@ -63,16 +71,26 @@
 
             .play {
                height: 100%;
-               border-radius: 100%;
+               border-radius: 50%;
                background-color: var(--primary);
                border-color: var(--primary);
                color: white;
+               aspect-ratio: 1 / 1;
+               padding-left: 11px;
 
                &:hover {
                 background-color: white;
                 color: var(--primary);
                }
             }
+        }
+
+        .taskAction {
+            padding: 10px;
+            font-weight: 550;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .separator {
@@ -82,11 +100,15 @@
             background-color: var(--darkened-background);
         }
 
+        .headerRow {
+            display: contents;
+        }
+
         .header {
             font-weight: 700;
             line-height: 1.5rem;
             padding: 10px;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
         }
 
         .row {
@@ -117,7 +139,7 @@
 
             .taskGrid {
                 display: grid;
-                grid-template-columns: 1fr 1fr 0.5fr;
+                grid-template-columns: 1fr 1fr auto;
             }
         }
     } 
