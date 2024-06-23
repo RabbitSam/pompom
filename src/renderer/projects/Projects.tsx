@@ -89,6 +89,7 @@ export default function Projects() {
                 {
                     HEADERS.map(header => (
                         <HeaderButton
+                            key={header.name}
                             name={header.name}
                             displayName={header.displayName}
                             currentSortingHeader={sortingHeader}

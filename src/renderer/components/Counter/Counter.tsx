@@ -20,7 +20,7 @@ export default function Counter({current, onIncrease, onDecrease, alt, orientati
     return (
         <div className={classes}>
             <div className="visuallyHidden">{alt}</div>
-            <Button category="tertiary" onClick={onIncrease}>
+            <Button category="tertiary" onClick={onIncrease} tooltip="Increase">
                 <div className="visuallyHidden">Increase</div>
                 <FontAwesomeIcon icon={faPlus} />
             </Button>
@@ -28,7 +28,7 @@ export default function Counter({current, onIncrease, onDecrease, alt, orientati
                 <div className="visuallyHidden">Current</div>
                 {current < 10 ? `0${current}` : current}{after}
             </div>
-            <Button category="tertiary" onClick={onDecrease}>
+            <Button category="tertiary" onClick={onDecrease} tooltip="Decrease">
                 <div className="visuallyHidden">Decrease</div>
                 <FontAwesomeIcon icon={faMinus} />
             </Button>

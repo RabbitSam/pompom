@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styles from "./Button.module.scss";
+import Tooltip from "../Tooltip/Tooltip";
 
 
 interface ButtonProps {
@@ -7,13 +8,17 @@ interface ButtonProps {
     type?: "button" | "submit" | "reset",
     children?: React.ReactNode,
     onClick: React.MouseEventHandler<HTMLButtonElement>,
-    disabled?: boolean
+    disabled?: boolean,
+    tooltip?: string
 };
 
 
-export default function Button({category, type, onClick, children, disabled=false} : ButtonProps) {
+export default function Button({category, type, onClick, children, disabled=false, tooltip} : ButtonProps) {
     return (
-        <button className={styles[`button-${category}`]} type={type ? type : "button"} onClick={onClick} disabled={disabled}>{children}</button>
+        <button className={styles[`button-${category}`]} type={type ? type : "button"} onClick={onClick} disabled={disabled}>
+            {children}
+            {tooltip && <Tooltip text={tooltip} />}
+        </button>
     );
 }
 
