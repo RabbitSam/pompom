@@ -118,14 +118,14 @@ export default function Projects() {
                                     {formatDate(projects[id].lastAccessed)}
                                 </Link>
                                 <div className={styles.projectActions}>
-                                    <Link to={`/projects/${id}/edit`}>
-                                        <div className="visuallyHidden">Edit</div>
-                                        <FontAwesomeIcon icon={faPenToSquare}/>
-                                    </Link>
-                                    <Link to={`/projects/${id}/delete`}>
-                                        <div className="visuallyHidden">Delete</div>
-                                        <FontAwesomeIcon icon={faTrash}/>
-                                    </Link>
+                                <ButtonLink to={`/projects/${id}/edit`} category="tertiary" tooltip="Edit Project">
+                                    <FontAwesomeIcon icon={faPenToSquare} width={20} height={20}/>
+                                    <div className="visuallyHidden">Edit Project</div>
+                                </ButtonLink>
+                                <ButtonLink to={`/projects/${id}/delete`} category="tertiary" tooltip="Delete Project">
+                                    <FontAwesomeIcon icon={faTrash} width={20} height={20}/>
+                                    <div className="visuallyHidden">Delete Project</div>
+                                </ButtonLink>
                                 </div>
                             </article>
                         </Fragment>

@@ -44,11 +44,6 @@
             .projectActions {
                 border-top-right-radius: 10px;
                 border-bottom-right-radius: 10px;
-
-                :last-child {
-                    border-top-right-radius: 10px;
-                    border-bottom-right-radius: 10px;
-                }
             }
         }
 
@@ -59,30 +54,18 @@
             line-height: 1.5rem;
             text-decoration: none;
             color: black;
+            display: flex;
+            align-items: center;
         }
 
         .projectActions {
             display: flex;
-            justify-content: center;
+            justify-content: right;
             align-items: center;
             height: 100%;
             width: 100%;
-
-            a {
-                color: var(--tertiary);
-                background-color: transparent;
-                height: 100%;
-                width: 100%;
-                text-decoration: none;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                &:hover {
-                    color: white;
-                    background-color: var(--tertiary);
-                }
-            }
+            gap: 5px;
+            padding: 10px;
         }
     }
 }
