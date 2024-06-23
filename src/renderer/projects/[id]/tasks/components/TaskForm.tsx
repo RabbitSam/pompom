@@ -9,10 +9,11 @@ import { useNavigate } from "react-router-dom";
 interface TaskFormProps {
     isEdit: boolean,
     projectId: string,
-    taskId?: number
+    taskId?: string
 }
 
 const DEFAULT_TASK : Task = {
+    id: "", 
     title: "",
     timer: {
         pomCount: 1,

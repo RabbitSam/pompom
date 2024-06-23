@@ -11,6 +11,7 @@ import EditProject from './projects/[id]/edit/EditProject';
 import DeleteProject from './projects/[id]/delete/DeleteProject';
 
 import CreateTask from './projects/[id]/tasks/create/CreateTask';
+import EditTask from './projects/[id]/tasks/[taskId]/edit/EditTask';
 
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
         <Route path="projects/create" element={<CreateProject />}/>
         
         <Route path="projects/:projectId/tasks/create" element={<CreateTask/>}/>
+        <Route path="projects/:projectId/tasks/:taskId/edit" element={<EditTask/>}/>
       </Routes>
     </Router>
   );
