@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectTimer } from "../stores/currentTimer/currentTimerSlice";
+import Tooltip from "../components/Tooltip/Tooltip";
 
 
 function convertToSeconds({hour, minute, second} : {hour: number, minute: number, second?: number}) : number {
@@ -191,10 +192,12 @@ export default function StartTimer() {
                 <button className={styles.playButton} onClick={handlePause}>
                     <span className="visuallyHidden">{isPaused ? "Play" : "Pause"}</span>
                     <FontAwesomeIcon icon={isPaused ? faPlay : faPause} width={20} height={20}/>
+                    <Tooltip text={isPaused ? "Play" : "Pause"}/>
                 </button>
                 <button className={styles.restartButton} onClick={handleRestart}>
                     <span className="visuallyHidden">Restart</span>
                     <FontAwesomeIcon icon={faRefresh} width={20} height={20}/>
+                    <Tooltip text="Restart"/>
                 </button>
             </div>
         </div>

@@ -84,6 +84,11 @@
                 color: var(--primary);
                 background-color: white;
             }
+
+            & > [class="tooltip"] {
+                bottom: 110%;
+                top: auto;
+            }
         }
 
         .restartButton {
@@ -94,6 +99,12 @@
                 color: var(--tertiary);
                 background-color: white;
             }
+
+            & > [class="tooltip"] {
+                bottom: 110%;
+                top: auto;
+            }
         }
+
     }
 }
