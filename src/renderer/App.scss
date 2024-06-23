@@ -71,18 +71,21 @@ button {
 }
 
 .tooltip {
+  --tooltip-background: #343434;
+
   position: absolute;
-  padding: 0px 5px;
+  padding: 3px 10px;
   top: 110%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  // width: max-content !important;
+  width: max-content !important;
 
   font-size: 0.75rem;
+  line-height: 1.1rem;
   font-weight: normal;
   letter-spacing: 0.25px;
-  background-color: dimgray;
+  background-color: var(--tooltip-background);
   color: white;
 
   border-radius: 5px;
@@ -90,7 +93,7 @@ button {
   user-select: none;
 
   &:hover {
-      background-color: dimgray;
+      background-color: var(--tooltip-background);
       color: white;
       border: none;
   }
