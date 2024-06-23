@@ -36,7 +36,10 @@ export default function registerTaskEvents() {
             }
 
             const taskId : string = uuid();
-            tasks[taskId] = newTask;
+            tasks[taskId] = {
+                ...newTask,
+                id: taskId
+            };
 
             // Doing this transactionally with possible rollback, so we're writing to a temp file first.
             writeFile(TEMP_TASKS_FILENAME, JSON.stringify(tasks), {encoding: "utf-8"}, (err) => {

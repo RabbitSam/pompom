@@ -6,12 +6,14 @@ import { sendEventResponse } from "../../util";
 export const FILENAME : string = "projects.json";
 
 export type Task = {
+    id: string,
     title: string,
     timer: TimerState,
     completedAt?: Date | string
 };
 
 export type Project = {
+    id: string
     title: string,
     createdAt: Date | string,
     lastModified: Date | string,
@@ -44,6 +46,7 @@ export default function registerProjectEvents() {
 
             const projectId : string = uuid();
             const newProject : Project = {
+                id: projectId,
                 title,
                 createdAt: new Date(),
                 lastModified: new Date(),
