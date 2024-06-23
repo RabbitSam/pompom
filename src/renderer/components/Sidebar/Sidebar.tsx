@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition, faHouse, faStopwatch, faLaptop } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import Tooltip from "../Tooltip/Tooltip";
 
 
 type Route = {
@@ -48,6 +49,7 @@ export default function Sidebar() {
                         <Link to={item.path} key={item.path} className={item.path === location.pathname ? styles.currentPath : ""}>
                             <FontAwesomeIcon icon={item.icon} width={"20px"}/>
                             <div>{item.title}</div>
+                            <Tooltip text={item.title}/>
                         </Link>
                     )
                 }

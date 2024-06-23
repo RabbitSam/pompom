@@ -27,10 +27,11 @@ interface ButtonLinkProps extends Omit<ButtonProps, "type" | "onClick"> {
     to: string
 }
 
-export function ButtonLink({category, children, to} : ButtonLinkProps) {
+export function ButtonLink({category, children, to, tooltip} : ButtonLinkProps) {
     return (
         <Link to={to} className={`${styles.buttonLink} ${styles[`button-${category}`]}`}>
             {children}
+            {tooltip && <Tooltip text={tooltip} />}
         </Link>
     );
 }
