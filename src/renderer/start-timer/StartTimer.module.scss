@@ -104,6 +104,15 @@
                 bottom: 110%;
                 top: auto;
             }
+
+            .repeatOne {
+                display: var(--fa-display, inline-block);
+                height: 1em;
+                overflow: visible;
+                vertical-align: -0.125em;
+                box-sizing: content-box;
+            }
+
         }
 
     }

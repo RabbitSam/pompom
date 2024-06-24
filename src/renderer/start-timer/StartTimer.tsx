@@ -40,6 +40,9 @@ export default function StartTimer() {
     useEffect(() => {
         //180x160
         window.electron.ipcRenderer.sendMessage("start-timer");
+        const event = new Event("hide-popup");
+
+        window.dispatchEvent(event);
     }, []);
 
     useEffect(() => {
@@ -102,7 +105,7 @@ export default function StartTimer() {
 
     const handleBack : MouseEventHandler<HTMLButtonElement> = (e) => {
         window.electron.ipcRenderer.sendMessage("end-timer");
-        navigate("/quick-pom");
+        navigate(-1);
     };
 
     const handlePause : MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -117,6 +120,10 @@ export default function StartTimer() {
 
     const handleRestart : MouseEventHandler<HTMLButtonElement> = (e) => {
         setPomsLeft(timer.pomCount);
+        handleRestartCurrent(e);
+    }
+
+    const handleRestartCurrent : MouseEventHandler<HTMLButtonElement> = (e) => {
         setPomTime(convertToSeconds(timer.pomTime));
         setBreakTime(convertToSeconds(timer.breakTime));
         setLongBreakTime(convertToSeconds(timer.longBreakTime));
@@ -127,7 +134,7 @@ export default function StartTimer() {
         <div className={styles.pageContainer}>
             <div className={styles.header}>
                 <button onClick={handleBack}>
-                    <span className="visuallyHidden">Go Back</span>
+                    <span className="visuallyHidden">Go Back (Closes Pom)</span>
                     <FontAwesomeIcon icon={faArrowLeft} width={20} height={20}/>
                 </button>
                 {
@@ -193,6 +200,14 @@ export default function StartTimer() {
                     <span className="visuallyHidden">{isPaused ? "Play" : "Pause"}</span>
                     <FontAwesomeIcon icon={isPaused ? faPlay : faPause} width={20} height={20}/>
                     <Tooltip text={isPaused ? "Play" : "Pause"}/>
+                </button>
+                <button className={styles.restartButton} onClick={handleRestartCurrent}>
+                    <span className="visuallyHidden">Restart Current Pom</span>
+                    <svg className={styles.repeatOne} width={20} height={20} viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden={true} focusable={false} >
+                        {/* <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--> */}
+                        <path fill="currentColor" d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96H320v32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32V64H160C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96H192V352c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V448H352c88.4 0 160-71.6 160-160z"/><path stroke="currentColor" stroke-width="50" stroke-linecap="round" d="m260 320v-120"/><line stroke="currentColor" stroke-width="50" stroke-linecap="round" x1="220" y1="220" x2="260" y2="200"/>
+                    </svg>
+                    <Tooltip text="Restart Current Pom"/>
                 </button>
                 <button className={styles.restartButton} onClick={handleRestart}>
                     <span className="visuallyHidden">Restart</span>
