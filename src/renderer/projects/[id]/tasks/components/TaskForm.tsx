@@ -70,7 +70,6 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
             };
         } else {
             const createTask = window.electron.ipcRenderer.on("create-task", (response: ElectronResponse) => {
-                console.log("Hello");
                 if (response.success) {
                     navigate(`/projects/${projectId}`);
                     handleSuccess();

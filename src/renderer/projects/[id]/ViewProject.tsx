@@ -155,7 +155,7 @@ export default function ViewProject() {
                                                 {task.title}
                                             </div>
                                         </div>
-                                        <div className={styles.taskContent}>
+                                        <div className={`${styles.taskContent} ${styles.pomCount}`}>
                                             {task.timer.pomCount}
                                         </div>
                                         <div className={styles.taskContent}>
