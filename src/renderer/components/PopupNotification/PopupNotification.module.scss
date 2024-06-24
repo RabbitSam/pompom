@@ -1,11 +1,14 @@
 .popupNotification {
+    --popup-width: 300px;
+    --negative-popup-width: -300px;
+
     position: fixed;
-    min-width: 300px;
-    max-width: 300px;
+    min-width: var(--popup-width);
+    max-width: var(--popup-width);
 
     z-index: 200;
     top: 64px;
-    right: -100%;
+    right: calc(var(--negative-popup-width) - 100%);
 
     box-shadow: 0px 0px 15px black;
 
@@ -57,6 +60,6 @@
     }
 
     &.hide {
-        right: -100% !important;
+        right: calc(var(--negative-popup-width) - 100%) !important;
     }
 }
