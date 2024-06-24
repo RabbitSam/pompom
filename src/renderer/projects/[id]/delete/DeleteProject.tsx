@@ -5,6 +5,7 @@ import Button from "../../../components/Button/Button";
 import styles from "./DeleteProject.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { MouseEventHandler, useEffect, useState } from "react";
+import showGenericErrorPopup from "../../utils/showGenericErrorPopup";
 
 
 export default function DeleteProject() {
@@ -19,14 +20,7 @@ export default function DeleteProject() {
             if (response.success) {
                 setProjectTitle(response.data.title);
             } else {
-                const event = new CustomEvent("show-popup", {
-                    detail: {
-                        type: "error",
-                        message: "An unexpected error occured. Please go back and return to try again."
-                    }
-                });
-
-                window.dispatchEvent(event);
+                showGenericErrorPopup();
             }
         });
 

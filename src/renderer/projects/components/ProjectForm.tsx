@@ -1,8 +1,8 @@
 import { FormEventHandler, useState, useEffect } from "react";
-import { Project } from "../../../main/events/projectEvents/projectEvents";
 import Button from "../../components/Button/Button";
 import styles from "./ProjectForm.module.scss";
 import { useNavigate } from "react-router-dom";
+import showGenericErrorPopup from "../utils/showGenericErrorPopup";
 
 
 interface ProjectFormProps {
@@ -70,12 +70,7 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
     }, []);
 
     const handleUnexpectedError = () => {
-        const event = new CustomEvent("show-popup", {detail: {
-            type: "error",
-            message: "An unexpected error occured. Please go back to projects page, come back and try again."
-        }});
-
-        window.dispatchEvent(event);
+        showGenericErrorPopup();
     };
 
     const handleSuccess = () => {

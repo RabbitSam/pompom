@@ -8,6 +8,7 @@ import { ButtonLink } from "../components/Button/Button";
 import natsort from "natsort";
 import { Link } from "react-router-dom";
 import formatDate from "./utils/formatDate";
+import showGenericErrorPopup from "./utils/showGenericErrorPopup";
 
 
 type SortingHeader = "title" | "createdAt" | "lastModified" | "lastAccessed";
@@ -41,12 +42,7 @@ export default function Projects() {
             if (response.success) {
                 setProjects(response.data);
             } else {
-                const event = new CustomEvent("show-popup", {detail: {
-                    type: "error",
-                    message: "An unexpected error occured, please visit another page and come back to try again."
-                }});
-
-                window.dispatchEvent(event);
+                showGenericErrorPopup();
             }
         });
 
