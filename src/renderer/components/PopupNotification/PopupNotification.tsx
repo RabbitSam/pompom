@@ -39,7 +39,7 @@ export default function PopupNotification() {
         <section className={`${styles.popupNotification} ${styles[`popupNotification${type}`]} ${visible ? styles.visible : ""}`} aria-hidden={!visible}>
             <div className={styles.title}>
                 <div>{type === "error" ? "Error" : "Success"}</div>
-                <button >
+                <button onClick={_ => setVisible(false)}>
                     <div className="visuallyHidden">Close Popup</div>
                     <FontAwesomeIcon icon={faXmark} width={20}/>
                 </button>
