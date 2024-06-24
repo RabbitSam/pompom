@@ -11,15 +11,20 @@ export default function PopupNotification() {
     const [type, setType] = useState<PopupType>("error");
     const [message, setMessage] = useState("An unexpected error occured. Please go back and try again.");
 
-
     useEffect(() => {
         const handleShow = ((e : CustomEvent) => {
             const { type, message } : {type: PopupType, message: string} = e.detail;
             
             setType(type);
             setMessage(message);
+            setVisible(prev => !prev);
 
-            setVisible(true);
+            if (!visible) {
+                setTimeout(() => {
+                    setVisible(true);
+                }, 300);
+            }
+
         }) as EventListener;
 
         const handleHide = ((e: CustomEvent) => {
@@ -36,7 +41,7 @@ export default function PopupNotification() {
     }, []);
 
     return (
-        <section className={`${styles.popupNotification} ${styles[`popupNotification${type}`]} ${visible ? styles.visible : ""}`} aria-hidden={!visible}>
+        <section className={`${styles.popupNotification} ${styles[`popupNotification${type}`]} ${visible ? styles.visible : styles.hide}`} aria-hidden={!visible}>
             <div className={styles.title}>
                 <div>{type === "error" ? "Error" : "Success"}</div>
                 <button onClick={_ => setVisible(false)}>
