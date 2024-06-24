@@ -32,6 +32,7 @@ export default function StartTimer() {
     const [longBreakTime, setLongBreakTime] = useState<number>(convertToSeconds(timer.longBreakTime));
 
     const [currentStage, setCurrentStage] = useState<number>(0);
+    const [stageComplete, setStageComplete] = useState<boolean>(false);
 
     const [isPaused, setIsPaused] = useState<boolean>(false);
 
@@ -55,6 +56,7 @@ export default function StartTimer() {
                         if (newPomTime === 0) {
                             setPomTime(convertToSeconds(timer.pomTime));
                             setCurrentStage(1);
+                            handleStageComplete();
                         } else {
                             setPomTime(newPomTime);
                         }
@@ -67,12 +69,14 @@ export default function StartTimer() {
                             setBreakTime(convertToSeconds(timer.breakTime));
 
                             setCurrentStage(2);
+                            handleStageComplete();
                         } else if (newBreakTime === 0) {
                             setBreakTime(convertToSeconds(timer.breakTime));
 
                             console.log(pomTime)
 
                             setCurrentStage(0);
+                            handleStageComplete();
                             setPomsLeft(pomsLeft - 1);
                         } else {
                             setBreakTime(newBreakTime);
@@ -86,6 +90,7 @@ export default function StartTimer() {
                             setLongBreakTime(convertToSeconds(timer.longBreakTime));
 
                             setCurrentStage(0);
+                            handleStageComplete();
                             setPomsLeft(pomsLeft - 1);
                         } else {
                             setLongBreakTime(newLongBreakTime);
@@ -102,6 +107,13 @@ export default function StartTimer() {
         }
     }, [pomTime, breakTime, longBreakTime, pomsLeft, currentStage, isPaused]);
 
+    const handleStageComplete = () => {
+        setStageComplete(prev => !prev);
+
+        setTimeout(() => {
+            setStageComplete(false);
+        }, 5000);
+    };
 
     const handleBack : MouseEventHandler<HTMLButtonElement> = (e) => {
         window.electron.ipcRenderer.sendMessage("end-timer");
@@ -131,14 +143,14 @@ export default function StartTimer() {
     }
 
     return (
-        <div className={styles.pageContainer}>
+        <div className={`${styles.pageContainer} ${stageComplete ? styles.stageComplete : ""}`}>
             <div className={styles.header}>
                 <button onClick={handleBack}>
                     <span className="visuallyHidden">Go Back (Closes Pom)</span>
                     <FontAwesomeIcon icon={faArrowLeft} width={20} height={20}/>
                 </button>
                 {
-                    pomsLeft > 2 ?
+                    pomsLeft >= 2 ?
                     <div className={styles.pomsLeft}>
                         Poms Left: {pomsLeft}
                     </div>

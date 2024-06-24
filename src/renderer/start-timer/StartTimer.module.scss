@@ -16,7 +16,7 @@
             border-radius: 0;
             cursor: pointer;
             color: var(--tertiary);
-            background-color: var(--background);
+            background-color: transparent;
 
             &:hover {
                 cursor: pointer;
@@ -66,6 +66,7 @@
         
         align-items: center;
         justify-content: safe center;
+        margin-bottom: 100px;
 
         button {
             border-radius: 100%;
@@ -115,5 +116,20 @@
 
         }
 
+    }
+
+    &.stageComplete {
+        animation: flicker 2s step-end 0s infinite;
+    }
+}
+
+@keyframes flicker {
+    0% {
+        background-color: var(--primary);
+        color: white;
+    }
+    50% {
+        background-color: transparent;
+        color: inherit;
     }
 }
