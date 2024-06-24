@@ -4,17 +4,15 @@ import styles from "./ViewProject.module.scss";
 import { Project, Task } from "../../../main/events/projectEvents/projectEvents";
 import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash, faPlus, faCheckSquare, faPlay, faCheck, faCheckCircle, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrash, faPlus, faPlay, faCheckCircle, faXmarkCircle } from "@fortawesome/free-solid-svg-icons";
 import Button, { ButtonLink } from "../../components/Button/Button";
-import { v5 } from "uuid";
 import formatDate from "../utils/formatDate";
 import { useDispatch } from "react-redux";
 import { setTimers } from "../../stores/currentTimer/currentTimerSlice";
 import getTotalTime from "../utils/getTotalTime";
 import Tooltip from "../../components/Tooltip/Tooltip";
+import showGenericErrorPopup from "../utils/showGenericErrorPopup";
 
-
-const UUID_NAMESPACE : string = "fe653147-b00b-40e0-8cda-b6acf9361430";
 
 const DEFAULT_PROJECT : Project = {
     id: "",
@@ -46,18 +44,33 @@ export default function ViewProject() {
         const getProject = window.electron.ipcRenderer.on("get-project", (response: ElectronResponse) => {
             if (response.success) {
                 setProject(response.data);
+            } else {
+                showGenericErrorPopup();
             }
         });
 
         const getTasks = window.electron.ipcRenderer.on("get-tasks", (response: ElectronResponse) => {
             if (response.success) {
                 setTasks(response.data);
+            } else {
+                showGenericErrorPopup();
             }
         });
 
         const setTaskCompletionStatus = window.electron.ipcRenderer.on("set-task-completion-status", (response: ElectronResponse) => {
             if (response.success) {
                 loadProject();
+
+                const event = new CustomEvent("show-popup", {
+                    detail: {
+                        type: "success",
+                        message: "Task completion status changed."   
+                    }
+                });
+
+                window.dispatchEvent(event);
+            } else {
+                showGenericErrorPopup();
             }
         });
 

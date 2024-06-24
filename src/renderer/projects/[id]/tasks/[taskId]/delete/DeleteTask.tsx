@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, MouseEventHandler } from "react";
 import Button from "../../../../../components/Button/Button";
 import styles from "./DeleteTask.module.scss";
+import showGenericErrorPopup from "../../../../utils/showGenericErrorPopup";
 
 
 export default function DeleteTask() {
@@ -18,6 +19,8 @@ export default function DeleteTask() {
         const getTask = window.electron.ipcRenderer.on("get-task", (response : ElectronResponse) => {
             if (response.success) {
                 setTaskTitle(response.data.title);
+            } else {
+                showGenericErrorPopup();
             }
         });
 
@@ -25,6 +28,16 @@ export default function DeleteTask() {
             if (response.success) {
                 navigate(`/projects/${projectId}`);
                 setIsError(false);
+
+                const event = new CustomEvent("show-popup", {
+                    detail: {
+                        type: "success",
+                        message: "Task deleted successfully."        
+                    }
+                });
+
+                window.dispatchEvent(event);
+
             } else {
                 setIsError(true);
             }

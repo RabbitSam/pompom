@@ -4,6 +4,7 @@ import PomGrid from "../../../../components/PomGrid/PomSetterGrid";
 import styles from "./TaskForm.module.scss";
 import Button from "../../../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
+import showGenericErrorPopup from "../../../utils/showGenericErrorPopup";
 
 
 interface TaskFormProps {
@@ -44,6 +45,8 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
             const getTask = window.electron.ipcRenderer.on("get-task", (response : ElectronResponse) => {
                 if (response.success) {
                     setTask(response.data);
+                } else {
+                    showGenericErrorPopup();
                 }
 
                 setLoading(false);
@@ -52,6 +55,7 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
             const editTask = window.electron.ipcRenderer.on("edit-task", (response : ElectronResponse) => {
                 if (response.success) {
                     navigate(`/projects/${projectId}`);
+                    handleSuccess();
                     setIsError(false);
                 } else {
                     setIsError(true);
@@ -69,6 +73,7 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
                 console.log("Hello");
                 if (response.success) {
                     navigate(`/projects/${projectId}`);
+                    handleSuccess();
                     setIsError(false);
                 } else {
                     setIsError(true);
@@ -88,6 +93,17 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
             window.electron.ipcRenderer.sendMessage("get-task", taskId);
         }
     }, []);
+
+    const handleSuccess = () => {
+        const event = new CustomEvent("show-popup", {
+            detail: {
+                type: "success",
+                message: isEdit ? "Task edited successfully." : "Task created successfully."
+            }
+        });
+
+        window.dispatchEvent(event);
+    };
 
     const handleSave = () => {
         setLoading(true);
