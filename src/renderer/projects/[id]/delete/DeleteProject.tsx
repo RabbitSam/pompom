@@ -18,6 +18,15 @@ export default function DeleteProject() {
         const getProject = window.electron.ipcRenderer.on("get-project", (response : ElectronResponse) => {
             if (response.success) {
                 setProjectTitle(response.data.title);
+            } else {
+                const event = new CustomEvent("show-popup", {
+                    detail: {
+                        type: "error",
+                        message: "An unexpected error occured. Please go back and return to try again."
+                    }
+                });
+
+                window.dispatchEvent(event);
             }
         });
 
@@ -25,6 +34,14 @@ export default function DeleteProject() {
             if (response.success) {
                 navigate("/projects");
                 setIsError(false);
+                const event = new CustomEvent("show-popup", {
+                    detail: {
+                        type: "success",
+                        message: "Project deleted successfully."
+                    }
+                });
+
+                window.dispatchEvent(event);
             } else {
                 setIsError(true);
             }

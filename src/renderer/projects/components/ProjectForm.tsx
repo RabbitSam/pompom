@@ -22,7 +22,9 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
             const createProject = window.electron.ipcRenderer.on("create-project", (response: ElectronResponse) => {
                 if (response.success) {
                     navigate(`/projects/${response.data}`);
+                    handleSuccess();
                     setIsError(false);
+                    
                 } else {
                     setIsError(true);
                 }
@@ -37,12 +39,15 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
             const getProject = window.electron.ipcRenderer.on("get-project", (response: ElectronResponse) => {
                 if (response.success) {
                     setProjectTitle(response.data.title);
+                } else {
+                    handleUnexpectedError();
                 }
             });
 
             const editProject = window.electron.ipcRenderer.on("edit-project", (response: ElectronResponse) => {
                 if (response.success) {
                     navigate(-1);
+                    handleSuccess();
                     setIsError(false);
                 } else {
                     setIsError(true);
@@ -63,6 +68,24 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
             window.electron.ipcRenderer.sendMessage("get-project", projectId);
         }
     }, []);
+
+    const handleUnexpectedError = () => {
+        const event = new CustomEvent("show-popup", {detail: {
+            type: "error",
+            message: "An unexpected error occured. Please go back to projects page, come back and try again."
+        }});
+
+        window.dispatchEvent(event);
+    };
+
+    const handleSuccess = () => {
+        const event = new CustomEvent("show-popup", {detail: {
+            type: "success",
+            message: isEdit ? "Project edited successfully." : "Project created successfully"
+        }});
+
+        window.dispatchEvent(event);
+    }
 
     const handleSubmit : FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();

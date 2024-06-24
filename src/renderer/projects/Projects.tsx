@@ -40,6 +40,13 @@ export default function Projects() {
         const getProjects = window.electron.ipcRenderer.on("get-projects", (response: ElectronResponse, ...args) => {
             if (response.success) {
                 setProjects(response.data);
+            } else {
+                const event = new CustomEvent("show-popup", {detail: {
+                    type: "error",
+                    message: "An unexpected error occured, please visit another page and come back to try again."
+                }});
+
+                window.dispatchEvent(event);
             }
         });
 
