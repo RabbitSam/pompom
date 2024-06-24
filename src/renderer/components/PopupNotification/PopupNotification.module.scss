@@ -1,0 +1,59 @@
+.popupNotification {
+    position: fixed;
+    min-width: 300px;
+    max-width: 300px;
+
+    z-index: 200;
+    top: 64px;
+    right: -100%;
+
+    box-shadow: 0px 0px 15px black;
+
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    padding-top: 10px;
+
+    background-color: var(--tertiary);
+    color: white;
+
+    &error {
+        background-color: var(--tertiary);
+    }
+
+    &success {
+        background-color: var(--primary);
+    }
+
+    transition: bottom right ease-in-out 300ms;
+
+    .title {
+        font-weight: 600;
+        font-size: 1.25rem;
+        line-height: 1.5rem;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        button {
+            background-color: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+
+            &:hover {
+                color: var(--tertiary);
+                background-color: white;
+            }
+        }
+    }
+
+    &.visible {
+        top: 64px !important;
+        right: 40px !important;
+    }
+}
