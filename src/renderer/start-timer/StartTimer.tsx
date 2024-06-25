@@ -65,7 +65,7 @@ export default function StartTimer() {
                     case 1:
                         const newBreakTime = breakTime - 1;
 
-                        if (newBreakTime === 0 && (timer.pomCount - pomsLeft) % 3 === 2) {
+                        if (newBreakTime === 0 && (timer.pomCount - pomsLeft) % 4 === 3) {
                             setBreakTime(convertToSeconds(timer.breakTime));
 
                             setCurrentStage(2);

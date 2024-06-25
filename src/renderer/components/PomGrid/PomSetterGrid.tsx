@@ -10,7 +10,7 @@ interface PomGridProps {
 
 
 export default function PomGrid({ value, onChange }: PomGridProps) {
-    const numLongBreaks : number = Math.floor(value.pomCount / 4);
+    const numLongBreaks : number = Math.floor(value.pomCount / 5);
 
     const totalPomMinutes : number = ((value.pomTime.minute + value.breakTime.minute) * value.pomCount) + (value.longBreakTime.minute * numLongBreaks);
     const finalHours = ((value.pomTime.hour + value.breakTime.hour) * value.pomCount) + Math.floor(totalPomMinutes / 60) + (value.longBreakTime.hour * numLongBreaks);

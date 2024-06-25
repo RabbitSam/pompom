@@ -28,7 +28,7 @@ const DEFAULT_TASK : Task = {
         },
         longBreakTime: {
             hour: 0,
-            minute: 15
+            minute: 20
         }
     }
 };

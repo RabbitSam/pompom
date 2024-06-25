@@ -22,7 +22,7 @@ const DEFAULT_BREAK_TIME: TimeState = {
 
 const DEFAULT_LONG_BREAK_TIME: TimeState = {
     hour: 0,
-    minute: 15
+    minute: 20
 };
 
 
