@@ -6,13 +6,14 @@ import styles from "./DeleteProject.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { MouseEventHandler, useEffect, useState } from "react";
 import showGenericErrorPopup from "../../utils/showGenericErrorPopup";
+import Loading from "../../../components/Loading/Loading";
 
 
 export default function DeleteProject() {
     const navigate = useNavigate();
     const { projectId } = useParams();
     const [projectTitle, setProjectTitle] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
 
     useEffect(() => {
@@ -22,6 +23,8 @@ export default function DeleteProject() {
             } else {
                 showGenericErrorPopup();
             }
+
+            setLoading(false);
         });
 
         const deleteProject = window.electron.ipcRenderer.on("delete-project", (response : ElectronResponse) => {
@@ -55,11 +58,13 @@ export default function DeleteProject() {
 
     const handleDelete : MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
+        setLoading(true);
         window.electron.ipcRenderer.sendMessage("delete-project", projectId);
     };
 
     return (
         <PageContainer className={styles.main}>
+            <Loading isLoading={loading}/>
             <h1>
                 <FontAwesomeIcon icon={faTrash}/> Delete Project
             </h1>
@@ -70,10 +75,10 @@ export default function DeleteProject() {
                 <strong>Project Name: {projectTitle}</strong>
             </p>
             <div className={styles.buttonsSection}>
-                <Button category="secondary" onClick={_ => navigate(-1)} disabled={loading}>
+                <Button category="secondary" onClick={_ => navigate(-1)}>
                     No, Go Back
                 </Button>
-                <Button category="tertiary" onClick={handleDelete} disabled={loading}>
+                <Button category="tertiary" onClick={handleDelete}>
                     {
                         isError ?
                         "An unexpected error occured. Please try again."

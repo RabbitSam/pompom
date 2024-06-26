@@ -3,6 +3,7 @@ import Button from "../../components/Button/Button";
 import styles from "./ProjectForm.module.scss";
 import { useNavigate } from "react-router-dom";
 import showGenericErrorPopup from "../utils/showGenericErrorPopup";
+import Loading from "../../components/Loading/Loading";
 
 
 interface ProjectFormProps {
@@ -42,6 +43,8 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
                 } else {
                     handleUnexpectedError();
                 }
+
+                setLoading(false);
             });
 
             const editProject = window.electron.ipcRenderer.on("edit-project", (response: ElectronResponse) => {
@@ -65,6 +68,7 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
 
     useEffect(() => {
         if (isEdit) {
+            setLoading(true);
             window.electron.ipcRenderer.sendMessage("get-project", projectId);
         }
     }, []);
@@ -94,33 +98,36 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <label htmlFor="projectTitle">
-                Project Name
-            </label>
-            <input 
-                type="text"
-                name="title"
-                id="projectTitle"
-                autoFocus
-                placeholder="Enter Project Name"
-                value={projectTitle}
-                onChange={e => setProjectTitle(e.target.value)}
-            />
-            <Button category="primary" onClick={e => console.log(e)} type="submit" disabled={loading || projectTitle.length === 0}>
-                {
-                    isError 
-                    ? 
-                    "An error occured. Please try again." 
-                    :
-                    <>
-                        Submit {isEdit ? "Changes" : ""}
-                    </>
-                }
-            </Button>
-            <Button category="tertiary" onClick={_ => navigate(-1)} disabled={loading}>
-                Cancel
-            </Button>
-        </form>
+        <>
+            <Loading isLoading={loading}/>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <label htmlFor="projectTitle">
+                    Project Name
+                </label>
+                <input 
+                    type="text"
+                    name="title"
+                    id="projectTitle"
+                    autoFocus
+                    placeholder="Enter Project Name"
+                    value={projectTitle}
+                    onChange={e => setProjectTitle(e.target.value)}
+                />
+                <Button category="primary" onClick={e => console.log(e)} type="submit" disabled={projectTitle.length === 0}>
+                    {
+                        isError 
+                        ? 
+                        "An error occured. Please try again." 
+                        :
+                        <>
+                            Submit {isEdit ? "Changes" : ""}
+                        </>
+                    }
+                </Button>
+                <Button category="tertiary" onClick={_ => navigate(-1)}>
+                    Cancel
+                </Button>
+            </form>
+        </>
     );
 }

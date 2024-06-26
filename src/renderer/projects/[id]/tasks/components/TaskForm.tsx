@@ -5,6 +5,7 @@ import styles from "./TaskForm.module.scss";
 import Button from "../../../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import showGenericErrorPopup from "../../../utils/showGenericErrorPopup";
+import Loading from "../../../../components/Loading/Loading";
 
 
 interface TaskFormProps {
@@ -89,6 +90,7 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
 
     useEffect(() => {
         if (isEdit) {
+            setLoading(true);
             window.electron.ipcRenderer.sendMessage("get-task", taskId);
         }
     }, []);
@@ -115,6 +117,7 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
 
     return (
         <>
+            <Loading isLoading={loading}/>
             <section className={styles.title}>
                 <label htmlFor="taskTitle">
                     Task Name
@@ -131,16 +134,16 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
             </section>
             <PomGrid value={task.timer} onChange={(timer) => setTask({...task, timer})}/>
             <section className={styles.submit}>
-                <Button category="primary" onClick={_ => handleSave()} disabled={loading || !task.title.length}>
+                <Button category="primary" onClick={_ => handleSave()} disabled={!task.title.length}>
                     {   isError ? "An unexpected error occured. Please try again." 
                         :
                         isEdit ? "Save Changes" : "Create Task"
                     }
                 </Button>
-                <Button category="tertiary" onClick={_ => setTask({...task, timer: DEFAULT_TASK.timer})} disabled={loading}>
+                <Button category="tertiary" onClick={_ => setTask({...task, timer: DEFAULT_TASK.timer})}>
                     Reset Timer
                 </Button>
-                <Button category="tertiary" onClick={_ => navigate(-1)} disabled={loading}>
+                <Button category="tertiary" onClick={_ => navigate(-1)}>
                     Cancel
                 </Button>
             </section>

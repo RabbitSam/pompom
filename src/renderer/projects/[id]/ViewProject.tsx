@@ -12,6 +12,7 @@ import { setTimers } from "../../stores/currentTimer/currentTimerSlice";
 import getTotalTime from "../utils/getTotalTime";
 import Tooltip from "../../components/Tooltip/Tooltip";
 import showGenericErrorPopup from "../utils/showGenericErrorPopup";
+import Loading from "../../components/Loading/Loading";
 
 
 const DEFAULT_PROJECT : Project = {
@@ -34,7 +35,8 @@ interface Tasks {
 
 export default function ViewProject() {
     const [project, setProject] = useState<Project>(DEFAULT_PROJECT);
-    const [tasks, setTasks] = useState<Tasks>({current: [], completed: []})
+    const [tasks, setTasks] = useState<Tasks>({current: [], completed: []});
+    const [loading, setLoading] = useState<boolean>(true);
     const { projectId } = useParams();
 
     const navigate = useNavigate();
@@ -47,6 +49,8 @@ export default function ViewProject() {
             } else {
                 showGenericErrorPopup();
             }
+
+            setLoading(false);
         });
 
         const getTasks = window.electron.ipcRenderer.on("get-tasks", (response: ElectronResponse) => {
@@ -55,6 +59,8 @@ export default function ViewProject() {
             } else {
                 showGenericErrorPopup();
             }
+
+            setLoading(false);
         });
 
         const setTaskCompletionStatus = window.electron.ipcRenderer.on("set-task-completion-status", (response: ElectronResponse) => {
@@ -71,6 +77,7 @@ export default function ViewProject() {
                 window.dispatchEvent(event);
             } else {
                 showGenericErrorPopup();
+                setLoading(false);
             }
         });
 
@@ -97,11 +104,13 @@ export default function ViewProject() {
     };
 
     const handleSetCompletionStatus = (taskId: string, isComplete: boolean) => {
+        setLoading(true);
         window.electron.ipcRenderer.sendMessage("set-task-completion-status", projectId, taskId, isComplete);
     };
 
     return (
         <PageContainer className={styles.main}>
+            <Loading isLoading={loading}/>
             <div className={styles.pageHeader}>
                 <h1>
                     {project.title}

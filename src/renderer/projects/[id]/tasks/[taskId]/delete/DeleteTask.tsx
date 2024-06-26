@@ -6,13 +6,14 @@ import { useState, useEffect, MouseEventHandler } from "react";
 import Button from "../../../../../components/Button/Button";
 import styles from "./DeleteTask.module.scss";
 import showGenericErrorPopup from "../../../../utils/showGenericErrorPopup";
+import Loading from "../../../../../components/Loading/Loading";
 
 
 export default function DeleteTask() {
     const navigate = useNavigate();
     const { projectId, taskId } = useParams();
     const [taskTitle, setTaskTitle] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
 
     useEffect(() => {
@@ -22,6 +23,8 @@ export default function DeleteTask() {
             } else {
                 showGenericErrorPopup();
             }
+
+            setLoading(false);
         });
 
         const deleteTask = window.electron.ipcRenderer.on("delete-task", (response : ElectronResponse) => {
@@ -57,11 +60,13 @@ export default function DeleteTask() {
 
     const handleDelete : MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
+        setLoading(true);
         window.electron.ipcRenderer.sendMessage("delete-task", projectId, taskId);
     };
 
     return (
         <PageContainer className={styles.main}>
+            <Loading isLoading={loading}/>
             <h1>
                 <FontAwesomeIcon icon={faTrash}/> Delete Task
             </h1>
@@ -72,10 +77,10 @@ export default function DeleteTask() {
                 <strong>Task Name: {taskTitle}</strong>
             </p>
             <div className={styles.buttonsSection}>
-                <Button category="secondary" onClick={_ => navigate(-1)} disabled={loading}>
+                <Button category="secondary" onClick={_ => navigate(-1)}>
                     No, Go Back
                 </Button>
-                <Button category="tertiary" onClick={handleDelete} disabled={loading}>
+                <Button category="tertiary" onClick={handleDelete}>
                     {
                         isError ?
                         "An unexpected error occured. Please try again."

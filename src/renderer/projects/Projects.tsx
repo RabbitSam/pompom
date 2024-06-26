@@ -2,13 +2,14 @@ import PageContainer from "../components/PageContainer/PageContainer";
 import styles from "./Projects.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLaptop, faArrowUp, faArrowDown, faPlus, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, MouseEventHandler, Fragment, Children, cloneElement, ReactHTMLElement } from "react";
+import { useState, useEffect, MouseEventHandler, Fragment } from "react";
 import { Projects } from "../../main/events/projectEvents/projectEvents";
 import { ButtonLink } from "../components/Button/Button";
 import natsort from "natsort";
 import { Link } from "react-router-dom";
 import formatDate from "./utils/formatDate";
 import showGenericErrorPopup from "./utils/showGenericErrorPopup";
+import Loading from "../components/Loading/Loading";
 
 
 type SortingHeader = "title" | "createdAt" | "lastModified" | "lastAccessed";
@@ -36,6 +37,7 @@ export default function Projects() {
     const [projects, setProjects] = useState<Projects>({});
     const [isAscending, setIsAscending] = useState(false);
     const [sortingHeader, setSortingHeader] = useState<SortingHeader>("lastAccessed");
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const getProjects = window.electron.ipcRenderer.on("get-projects", (response: ElectronResponse, ...args) => {
@@ -44,6 +46,8 @@ export default function Projects() {
             } else {
                 showGenericErrorPopup();
             }
+
+            setIsLoading(false);
         });
 
         return () => {
@@ -78,6 +82,7 @@ export default function Projects() {
 
     return (
         <PageContainer className={styles.main}>
+            <Loading isLoading={isLoading}/>
             <h1>
                 <FontAwesomeIcon icon={faLaptop}/>&nbsp;
                 Projects
