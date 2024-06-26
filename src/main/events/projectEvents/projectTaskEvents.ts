@@ -206,10 +206,20 @@ export default function registerTaskEvents() {
     ipcMain.on(taskEventWrapper("get-task"), async (event, taskId: string) => {
         readFile(FILENAME, {encoding: "utf-8"}, (err, data) => {
             if (err) {
-                sendEventResponse(event, taskEventWrapper("get-task"), {
-                    success: false,
-                    error: new Error("Couldn't open tasks file")
-                });
+                if (err.code === "ENOENT") {
+                    sendEventResponse(event, taskEventWrapper("get-tasks"), {
+                        success: true,
+                        data: {
+                            completed: [],
+                            current: []
+                        }
+                    });
+                } else {
+                    sendEventResponse(event, taskEventWrapper("get-task"), {
+                        success: false,
+                        error: new Error("Couldn't open tasks file")
+                    });
+                }
             } else {
                 const tasks : Tasks = JSON.parse(data);
                 if (taskId in tasks) {
@@ -241,10 +251,20 @@ export default function registerTaskEvents() {
 
                     readFile(FILENAME, {encoding: "utf-8"}, (err, tasksData) => {
                         if (err) {
-                            sendEventResponse(event, taskEventWrapper("get-tasks"), {
-                                success: false,
-                                error: new Error("Couldn't open tasks file.")
-                            });
+                            if (err.code === "ENOENT") {
+                                sendEventResponse(event, taskEventWrapper("get-tasks"), {
+                                    success: true,
+                                    data: {
+                                        completed: [],
+                                        current: []
+                                    }
+                                });
+                            } else {
+                                sendEventResponse(event, taskEventWrapper("get-tasks"), {
+                                    success: false,
+                                    error: new Error("Couldn't open tasks file.")
+                                });
+                            }
                         } else {
                             const tasks : Tasks = JSON.parse(tasksData);
 

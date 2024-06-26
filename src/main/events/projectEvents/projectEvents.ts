@@ -151,12 +151,19 @@ export default function registerProjectEvents() {
     ipcMain.on(projectEventWrapper("get-projects"), async (event, ...args) => {
         readFile(FILENAME, {encoding: "utf-8"}, (err, data) => {
             if (err) {
-                const response : ElectronResponse = {
-                    success: false,
-                    error: err
-                };
+                if (err.code === "ENOENT") {
+                    sendEventResponse(event, projectEventWrapper("get-projects"), {
+                        success: true,
+                        data: {}
+                    });
+                } else {
+                    const response : ElectronResponse = {
+                        success: false,
+                        error: err
+                    };
 
-                sendEventResponse(event, projectEventWrapper("get-projects"), response);
+                    sendEventResponse(event, projectEventWrapper("get-projects"), response);
+                }
             } else {
                 const projects : Projects = JSON.parse(data);
                 const response : ElectronResponse = {
