@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import formatDate from "./utils/formatDate";
 import showGenericErrorPopup from "./utils/showGenericErrorPopup";
 import Loading from "../components/Loading/Loading";
+import GenericError from "../components/GenericError/GenericError";
 
 
 type SortingHeader = "title" | "createdAt" | "lastModified" | "lastAccessed";
@@ -38,6 +39,8 @@ export default function Projects() {
     const [isAscending, setIsAscending] = useState(false);
     const [sortingHeader, setSortingHeader] = useState<SortingHeader>("lastAccessed");
     const [isLoading, setIsLoading] = useState(true);
+    const [unexpectedError, setUnexpectedError] = useState(false);
+
 
     useEffect(() => {
         const getProjects = window.electron.ipcRenderer.on("get-projects", (response: ElectronResponse, ...args) => {
@@ -45,6 +48,7 @@ export default function Projects() {
                 setProjects(response.data);
             } else {
                 showGenericErrorPopup();
+                setUnexpectedError(true);
             }
 
             setIsLoading(false);
@@ -82,6 +86,7 @@ export default function Projects() {
 
     return (
         <PageContainer className={styles.main}>
+            <GenericError isError={unexpectedError}/>
             <Loading isLoading={isLoading}/>
             <h1>
                 <FontAwesomeIcon icon={faLaptop}/>&nbsp;

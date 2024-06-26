@@ -4,6 +4,7 @@ import styles from "./ProjectForm.module.scss";
 import { useNavigate } from "react-router-dom";
 import showGenericErrorPopup from "../utils/showGenericErrorPopup";
 import Loading from "../../components/Loading/Loading";
+import GenericError from "../../components/GenericError/GenericError";
 
 
 interface ProjectFormProps {
@@ -16,6 +17,7 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
     const [projectTitle, setProjectTitle] = useState("");
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [unexpectedError, setUnexpectedError] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -75,6 +77,7 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
 
     const handleUnexpectedError = () => {
         showGenericErrorPopup();
+        setUnexpectedError(true);
     };
 
     const handleSuccess = () => {
@@ -99,6 +102,7 @@ export default function ProjectForm({isEdit, projectId}: ProjectFormProps) {
 
     return (
         <>
+            <GenericError isError={unexpectedError}/>
             <Loading isLoading={loading}/>
             <form onSubmit={handleSubmit} className={styles.form}>
                 <label htmlFor="projectTitle">

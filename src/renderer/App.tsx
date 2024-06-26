@@ -1,4 +1,4 @@
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './home/Home';
 import './App.scss';
 import QuickPom from './quick-pom/QuickPom';

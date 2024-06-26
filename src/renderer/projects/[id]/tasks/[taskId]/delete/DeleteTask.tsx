@@ -7,6 +7,7 @@ import Button from "../../../../../components/Button/Button";
 import styles from "./DeleteTask.module.scss";
 import showGenericErrorPopup from "../../../../utils/showGenericErrorPopup";
 import Loading from "../../../../../components/Loading/Loading";
+import GenericError from "../../../../../components/GenericError/GenericError";
 
 
 export default function DeleteTask() {
@@ -15,6 +16,7 @@ export default function DeleteTask() {
     const [taskTitle, setTaskTitle] = useState("");
     const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+    const [unexpectedError, setUnexpectedError] = useState(false);
 
     useEffect(() => {
         const getTask = window.electron.ipcRenderer.on("get-task", (response : ElectronResponse) => {
@@ -22,6 +24,7 @@ export default function DeleteTask() {
                 setTaskTitle(response.data.title);
             } else {
                 showGenericErrorPopup();
+                setUnexpectedError(true);
             }
 
             setLoading(false);
@@ -66,6 +69,7 @@ export default function DeleteTask() {
 
     return (
         <PageContainer className={styles.main}>
+            <GenericError isError={unexpectedError}/>
             <Loading isLoading={loading}/>
             <h1>
                 <FontAwesomeIcon icon={faTrash}/> Delete Task

@@ -13,6 +13,7 @@ import getTotalTime from "../utils/getTotalTime";
 import Tooltip from "../../components/Tooltip/Tooltip";
 import showGenericErrorPopup from "../utils/showGenericErrorPopup";
 import Loading from "../../components/Loading/Loading";
+import GenericError from "../../components/GenericError/GenericError";
 
 
 const DEFAULT_PROJECT : Project = {
@@ -37,6 +38,7 @@ export default function ViewProject() {
     const [project, setProject] = useState<Project>(DEFAULT_PROJECT);
     const [tasks, setTasks] = useState<Tasks>({current: [], completed: []});
     const [loading, setLoading] = useState<boolean>(true);
+    const [unexpectedError, setUnexpectedError] = useState(false);
     const { projectId } = useParams();
 
     const navigate = useNavigate();
@@ -48,6 +50,7 @@ export default function ViewProject() {
                 setProject(response.data);
             } else {
                 showGenericErrorPopup();
+                setUnexpectedError(true);
             }
 
             setLoading(false);
@@ -58,6 +61,7 @@ export default function ViewProject() {
                 setTasks(response.data);
             } else {
                 showGenericErrorPopup();
+                setUnexpectedError(true);
             }
 
             setLoading(false);
@@ -77,6 +81,7 @@ export default function ViewProject() {
                 window.dispatchEvent(event);
             } else {
                 showGenericErrorPopup();
+                setUnexpectedError(true);
                 setLoading(false);
             }
         });
@@ -110,6 +115,7 @@ export default function ViewProject() {
 
     return (
         <PageContainer className={styles.main}>
+            <GenericError isError={unexpectedError}/>
             <Loading isLoading={loading}/>
             <div className={styles.pageHeader}>
                 <h1>

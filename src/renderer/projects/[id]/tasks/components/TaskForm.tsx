@@ -6,6 +6,7 @@ import Button from "../../../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import showGenericErrorPopup from "../../../utils/showGenericErrorPopup";
 import Loading from "../../../../components/Loading/Loading";
+import GenericError from "../../../../components/GenericError/GenericError";
 
 
 interface TaskFormProps {
@@ -39,6 +40,7 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
     const [task, setTask] = useState<Task>(DEFAULT_TASK);
     const [loading, setLoading] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [unexpectedError, setUnexpectedError] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -48,6 +50,7 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
                     setTask(response.data);
                 } else {
                     showGenericErrorPopup();
+                    setUnexpectedError(true);
                 }
 
                 setLoading(false);
@@ -117,6 +120,7 @@ export default function TaskForm({ isEdit, projectId, taskId }: TaskFormProps) {
 
     return (
         <>
+            <GenericError isError={unexpectedError}/>
             <Loading isLoading={loading}/>
             <section className={styles.title}>
                 <label htmlFor="taskTitle">

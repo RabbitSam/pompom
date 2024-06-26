@@ -7,6 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MouseEventHandler, useEffect, useState } from "react";
 import showGenericErrorPopup from "../../utils/showGenericErrorPopup";
 import Loading from "../../../components/Loading/Loading";
+import GenericError from "../../../components/GenericError/GenericError";
+
 
 
 export default function DeleteProject() {
@@ -15,6 +17,7 @@ export default function DeleteProject() {
     const [projectTitle, setProjectTitle] = useState("");
     const [loading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
+    const [unexpectedError, setUnexpectedError] = useState(false);
 
     useEffect(() => {
         const getProject = window.electron.ipcRenderer.on("get-project", (response : ElectronResponse) => {
@@ -22,6 +25,7 @@ export default function DeleteProject() {
                 setProjectTitle(response.data.title);
             } else {
                 showGenericErrorPopup();
+                setUnexpectedError(true);
             }
 
             setLoading(false);
@@ -64,6 +68,7 @@ export default function DeleteProject() {
 
     return (
         <PageContainer className={styles.main}>
+            <GenericError isError={unexpectedError}/>
             <Loading isLoading={loading}/>
             <h1>
                 <FontAwesomeIcon icon={faTrash}/> Delete Project
