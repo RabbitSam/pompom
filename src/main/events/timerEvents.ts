@@ -9,17 +9,31 @@ function timerEventWrapper(timerEvent: TimerEvent): TimerEvent {
 export type TimerEvent = "start-timer" | "end-timer";
 
 export default function registerTimerEvents() {
+    let wasMaximized = mainWindow?.isMaximized();
+    let size = mainWindow?.getSize();
+
     ipcMain.on(timerEventWrapper("start-timer"), async (event, arg) => {
+        wasMaximized = mainWindow?.isMaximized();
+
         mainWindow?.unmaximize();
+        size = mainWindow?.getSize();
+
         mainWindow?.setSize(200, 200);
         mainWindow?.setMenuBarVisibility(false);
-        mainWindow?.setAlwaysOnTop(true);
+        mainWindow?.setAlwaysOnTop(true, "pop-up-menu");
       
       });
       
     ipcMain.on(timerEventWrapper("end-timer"), async (event, arg) => {
-        mainWindow?.setSize(1024, 768);
-        mainWindow?.maximize();
+        if (size) {
+            mainWindow?.setSize(size[0], size[1]);
+        } else {
+            mainWindow?.setSize(1024, 768);
+        }
+
+        if (wasMaximized) {
+            mainWindow?.maximize();
+        }
         mainWindow?.setAlwaysOnTop(false);
     });
 }
