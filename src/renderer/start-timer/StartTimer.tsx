@@ -55,8 +55,15 @@ export default function StartTimer() {
 
                         if (newPomTime === 0) {
                             setPomTime(convertToSeconds(timer.pomTime));
-                            setCurrentStage(1);
+
+                            if ((timer.pomCount - pomsLeft) % 4 === 3) {
+                                setCurrentStage(2);
+                            } else {
+                                setCurrentStage(1);
+                            }
+
                             handleStageComplete();
+                            setPomsLeft(prev => prev - 1);
                         } else {
                             setPomTime(newPomTime);
                         }
@@ -65,19 +72,11 @@ export default function StartTimer() {
                     case 1:
                         const newBreakTime = breakTime - 1;
 
-                        if (newBreakTime === 0 && (timer.pomCount - pomsLeft) % 4 === 3) {
+                        if (newBreakTime === 0) {
                             setBreakTime(convertToSeconds(timer.breakTime));
-
-                            setCurrentStage(2);
-                            handleStageComplete();
-                        } else if (newBreakTime === 0) {
-                            setBreakTime(convertToSeconds(timer.breakTime));
-
-                            console.log(pomTime)
 
                             setCurrentStage(0);
                             handleStageComplete();
-                            setPomsLeft(pomsLeft - 1);
                         } else {
                             setBreakTime(newBreakTime);
                         }
@@ -91,7 +90,6 @@ export default function StartTimer() {
 
                             setCurrentStage(0);
                             handleStageComplete();
-                            setPomsLeft(pomsLeft - 1);
                         } else {
                             setLongBreakTime(newLongBreakTime);
                         }
@@ -136,6 +134,9 @@ export default function StartTimer() {
     }
 
     const handleRestartCurrent : MouseEventHandler<HTMLButtonElement> = (e) => {
+        if (currentStage !== 0) {
+            setPomsLeft(prev => prev + 1);
+        }
         setPomTime(convertToSeconds(timer.pomTime));
         setBreakTime(convertToSeconds(timer.breakTime));
         setLongBreakTime(convertToSeconds(timer.longBreakTime));

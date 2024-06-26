@@ -21,11 +21,11 @@ export default function registerTimerEvents() {
         mainWindow?.setSize(200, 200);
         mainWindow?.setMenuBarVisibility(false);
         mainWindow?.setAlwaysOnTop(true, "pop-up-menu");
-      
-      });
+
+    });
       
     ipcMain.on(timerEventWrapper("end-timer"), async (event, arg) => {
-        if (size) {
+        if (size && !wasMaximized) {
             mainWindow?.setSize(size[0], size[1]);
         } else {
             mainWindow?.setSize(1024, 768);
