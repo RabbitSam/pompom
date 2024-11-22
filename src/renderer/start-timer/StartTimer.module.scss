@@ -27,6 +27,10 @@
 
         .pomsLeft {
             font-weight: 600;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
         }
     }
 

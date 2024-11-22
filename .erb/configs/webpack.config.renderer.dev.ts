@@ -112,6 +112,11 @@ const configuration: webpack.Configuration = {
           'file-loader',
         ],
       },
+      // MP3
+      {
+        test: /\.mp3$/,
+        loader: "file-loader"
+      }
     ],
   },
   plugins: [

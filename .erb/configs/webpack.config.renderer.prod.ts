@@ -88,6 +88,11 @@ const configuration: webpack.Configuration = {
           'file-loader',
         ],
       },
+      //Mp3
+      {
+        test: /\.mp3$/,
+        loader: "file-loader"
+      }
     ],
   },
 

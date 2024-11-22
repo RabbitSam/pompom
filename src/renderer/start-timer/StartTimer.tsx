@@ -1,11 +1,12 @@
 import { MouseEventHandler, useEffect, useState } from "react";
 import styles from "./StartTimer.module.scss";
-import { faArrowLeft, faXmark, faPlay, faRefresh, faPause } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faXmark, faPlay, faRefresh, faPause, faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectTimer } from "../stores/currentTimer/currentTimerSlice";
 import Tooltip from "../components/Tooltip/Tooltip";
+import notificationAudio from "../../../assets/audio/NotificationSound.mp3";
 
 
 function convertToSeconds({hour, minute, second} : {hour: number, minute: number, second?: number}) : number {
@@ -35,8 +36,10 @@ export default function StartTimer() {
     const [stageComplete, setStageComplete] = useState<boolean>(false);
 
     const [isPaused, setIsPaused] = useState<boolean>(false);
+    const [shouldPlayAudio, setShouldPlayAudio] = useState<boolean>(false);
 
     let intervalId : NodeJS.Timeout;
+    let audio : HTMLAudioElement;
 
     useEffect(() => {
         //180x160
@@ -107,9 +110,11 @@ export default function StartTimer() {
 
     const handleStageComplete = () => {
         setStageComplete(prev => !prev);
+        setShouldPlayAudio(true);
 
         setTimeout(() => {
             setStageComplete(false);
+            setShouldPlayAudio(false);
         }, 5000);
     };
 
@@ -143,6 +148,10 @@ export default function StartTimer() {
         setCurrentStage(0);
     }
 
+    const handleStopAlarm : MouseEventHandler<HTMLButtonElement> = (e) => {
+        setShouldPlayAudio(false);
+    };
+
     return (
         <div className={`${styles.pageContainer} ${stageComplete ? styles.stageComplete : ""}`}>
             <div className={styles.header}>
@@ -150,17 +159,29 @@ export default function StartTimer() {
                     <span className="visuallyHidden">Go Back (Closes Pom)</span>
                     <FontAwesomeIcon icon={faArrowLeft} width={20} height={20}/>
                 </button>
+                <div className={styles.pomsLeft}>
                 {
                     pomsLeft >= 2 ?
-                    <div className={styles.pomsLeft}>
+                    <>
                         Poms Left: {pomsLeft}
-                    </div>
+                    </>
                     :
                     pomsLeft === 1 &&
-                    <div className={styles.pomsLeft}>
+                    <>
                         Last Pom!
-                    </div>
+                    </>
                 }
+                {
+                    shouldPlayAudio &&
+                    <>
+                        <audio loop autoPlay src={notificationAudio}></audio>
+                        <button onClick={handleStopAlarm}>
+                            <span className="visuallyHidden">Stop Notification Sound</span>
+                            <FontAwesomeIcon icon={faBell} width={20} height={20}/>
+                        </button>
+                    </>
+                }
+                </div>
                 <button onClick={e => window.electron.ipcRenderer.sendMessage("close")}>
                     <span className="visuallyHidden">Close App</span>
                     <FontAwesomeIcon icon={faXmark} width={20} height={20} />
